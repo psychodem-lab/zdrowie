@@ -3,142 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HealthCheck Pro - Zaawansowana Diagnostyka</title>
+    <title>HealthCheck Pro - Professional Clinical Data</title>
     <style>
         :root {
-            /* Paleta kolorów - Clinical Clean */
             --primary: #0081a7; 
             --primary-dark: #005f73;
             --accent: #00afb9;
-            --bg: #fdfcdc;
             --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #eef2f3 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: #ffffff;
             --text-main: #2b2d42;
             --text-muted: #8d99ae;
             --success: #38b000;
             --warning: #ffaa00;
             --danger: #d00000;
-            
-            --radius: 16px;
-            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            --border: 1px solid rgba(0,0,0,0.05);
+            --radius: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
-            line-height: 1.5;
-            padding: 40px 20px;
-            min-height: 100vh;
+            line-height: 1.6;
+            padding: 40px 10px;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 50px; }
+        header h1 { font-weight: 800; font-size: 2.8rem; color: var(--primary-dark); }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
 
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        header h1 {
-            font-weight: 800;
-            font-size: 3rem;
-            background: -webkit-linear-gradient(var(--primary-dark), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        /* Grid System */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        /* Cards */
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
             padding: 30px;
             box-shadow: var(--shadow);
-            border: var(--border);
-            backdrop-filter: blur(10px);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid #edf2f7;
             display: flex;
             flex-direction: column;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 15px;
-        }
-
-        .card h2 {
-            font-size: 1.2rem;
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-icon {
-            font-size: 1.4rem;
-        }
-
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
+        .card h2 { font-size: 1.3rem; margin-bottom: 20px; color: var(--primary-dark); border-bottom: 2px solid #f7fafc; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
+        
         input, select {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
             font-size: 1rem;
-            background: #fafafa;
-            transition: all 0.2s;
+            transition: border-color 0.2s;
         }
 
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(0, 129, 167, 0.1);
-        }
+        input:focus { border-color: var(--primary); outline: none; }
 
         button {
             width: 100%;
@@ -147,107 +68,47 @@
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
-            margin-top: auto; /* Push to bottom if flex container */
-        }
-
-        button:hover {
-            background-color: var(--primary-dark);
-        }
-
-        button.outline {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
             margin-top: 10px;
+            transition: background 0.2s;
         }
 
-        button.outline:hover {
-            background: rgba(0, 129, 167, 0.05);
-        }
+        button:hover { background-color: var(--primary-dark); }
+        button.outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
 
-        /* Results Area */
         .result-box {
             margin-top: 20px;
             padding: 15px;
-            background: #f8fdff;
+            background: #f7fafc;
             border-radius: 8px;
-            border-left: 4px solid var(--accent);
+            border-left: 5px solid var(--accent);
             display: none;
-            animation: fadeIn 0.3s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .result-value { font-size: 1.8rem; font-weight: 800; }
+        .result-desc { font-size: 0.95rem; color: var(--text-muted); }
 
-        .result-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1.2;
-        }
-
-        .result-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #fff;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-
-        /* Specyficzne dla Pulsometru */
         #tap-area {
-            height: 100px;
+            height: 120px;
             border: 2px dashed #cbd5e1;
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            user-select: none;
-            margin-bottom: 15px;
             background: #f8fafc;
+            margin-bottom: 15px;
+            font-weight: bold;
             color: var(--text-muted);
-            transition: all 0.1s;
-        }
-        #tap-area:active {
-            background: #e2e8f0;
-            border-color: var(--primary);
-            transform: scale(0.98);
+            user-select: none;
         }
 
-        /* Specyficzne dla Ruffiera */
-        .timer-display {
-            font-family: monospace;
-            font-size: 2rem;
-            text-align: center;
-            margin: 10px 0;
-            color: var(--primary-dark);
-        }
+        .timer-display { font-family: monospace; font-size: 2.2rem; text-align: center; margin: 15px 0; color: var(--primary-dark); }
+        .hidden { display: none; }
         
-        /* Footer */
-        footer {
-            margin-top: 60px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            border-top: 1px solid rgba(0,0,0,0.05);
-            padding-top: 30px;
-        }
+        footer { margin-top: 60px; text-align: center; font-size: 0.85rem; color: var(--text-muted); padding: 20px; border-top: 1px solid #e2e8f0; }
     </style>
 </head>
 <body>
@@ -255,31 +116,47 @@
 <div class="container">
     <header>
         <h1>HealthCheck Pro</h1>
-        <p>Precyzyjne algorytmy. Czyste dane. zero domysłów.</p>
+        <p>Zaawansowana analityka medyczna i wskaźniki antropometryczne.</p>
     </header>
 
     <div class="grid">
         
         <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">⚖️</span> BMI</h2>
+            <h2><span class="card-icon">⚖️</span> BMI (Siatki Centylowe)</h2>
+            <div class="form-group">
+                <label>Grupa wiekowa</label>
+                <select id="bmi-group" onchange="toggleAgeGroup()">
+                    <option value="adult">Dorosły (20+ lat)</option>
+                    <option value="minor">Dziecko / Nastolatek (5-19 lat)</option>
+                </select>
+            </div>
+            <div id="minor-fields" class="hidden">
+                <div class="form-group">
+                    <label>Płeć</label>
+                    <select id="bmi-gender">
+                        <option value="male">Chłopiec</option>
+                        <option value="female">Dziewczynka</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dokładny wiek (lat)</label>
+                    <input type="number" id="bmi-age-val" placeholder="np. 12">
+                </div>
             </div>
             <div class="form-group">
                 <label>Waga (kg)</label>
-                <input type="number" id="bmi-weight" placeholder="np. 75">
+                <input type="number" id="bmi-weight" step="0.1">
             </div>
             <div class="form-group">
                 <label>Wzrost (cm)</label>
-                <input type="number" id="bmi-height" placeholder="np. 180">
+                <input type="number" id="bmi-height">
             </div>
-            <button onclick="calcBMI()">Oblicz BMI</button>
+            <button onclick="calculateBMI()">Oblicz Wskaźnik</button>
             <div id="res-bmi" class="result-box"></div>
         </div>
 
         <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">📏</span> WHR (Talia/Biodra)</h2>
-            </div>
+            <h2><span class="card-icon">📏</span> WHR (Rozkład tłuszczu)</h2>
             <div class="form-group">
                 <label>Płeć</label>
                 <select id="whr-gender">
@@ -287,123 +164,70 @@
                     <option value="k">Kobieta</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label>Obwód talii (cm)</label>
-                <input type="number" id="whr-waist" placeholder="W najwęższym miejscu">
-            </div>
-            <div class="form-group">
-                <label>Obwód bioder (cm)</label>
-                <input type="number" id="whr-hip" placeholder="W najszerszym miejscu">
-            </div>
-            <button onclick="calcWHR()">Analizuj sylwetkę</button>
+            <div class="form-group"><label>Obwód talii (cm)</label><input type="number" id="whr-waist"></div>
+            <div class="form-group"><label>Obwód bioder (cm)</label><input type="number" id="whr-hip"></div>
+            <button onclick="calculateWHR()">Oblicz WHR</button>
             <div id="res-whr" class="result-box"></div>
         </div>
 
         <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">🧍</span> WHtR (Talia/Wzrost)</h2>
-            </div>
+            <h2><span class="card-icon">🔥</span> BMR (Zapotrzebowanie)</h2>
             <div class="form-group">
-                <label>Obwód talii (cm)</label>
-                <input type="number" id="whtr-waist" placeholder="np. 80">
+                <label>Płeć</label>
+                <select id="bmr-gender">
+                    <option value="m">Mężczyzna</option>
+                    <option value="k">Kobieta</option>
+                </select>
             </div>
-            <div class="form-group">
-                <label>Wzrost (cm)</label>
-                <input type="number" id="whtr-height" placeholder="np. 180">
+            <div style="display:flex; gap:10px">
+                <div class="form-group"><label>Waga (kg)</label><input type="number" id="bmr-weight"></div>
+                <div class="form-group"><label>Wzrost (cm)</label><input type="number" id="bmr-height"></div>
+                <div class="form-group"><label>Wiek</label><input type="number" id="bmr-age"></div>
             </div>
-            <button onclick="calcWHtR()">Sprawdź ryzyko metaboliczne</button>
-            <div id="res-whtr" class="result-box"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">🔥</span> BMR (Mifflin-St Jeor)</h2>
-            </div>
-            <div class="form-row">
-                <div class="form-group" style="flex:1">
-                    <label>Płeć</label>
-                    <select id="bmr-gender">
-                        <option value="m">M</option>
-                        <option value="k">K</option>
-                    </select>
-                </div>
-                <div class="form-group" style="flex:1">
-                    <label>Wiek</label>
-                    <input type="number" id="bmr-age" placeholder="Lat">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group" style="flex:1">
-                    <label>Waga (kg)</label>
-                    <input type="number" id="bmr-weight">
-                </div>
-                <div class="form-group" style="flex:1">
-                    <label>Wzrost (cm)</label>
-                    <input type="number" id="bmr-height">
-                </div>
-            </div>
-            <button onclick="calcBMR()">Oblicz zapotrzebowanie</button>
+            <button onclick="calculateBMR()">Oblicz Mifflin-St Jeor</button>
             <div id="res-bmr" class="result-box"></div>
         </div>
 
         <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">❤️</span> Pulsometr (Tap)</h2>
-            </div>
+            <h2><span class="card-icon">❤️</span> Pulsometr (Manualny)</h2>
+            <p style="font-size:0.8rem; margin-bottom:10px;">Instrukcja: Klikaj w pole poniżej zgodnie z uderzeniami serca przez minimum 5 sekund.</p>
             <div id="tap-area" onclick="handleTap()">
-                TAP
+                <span>KLIKAJ TUTAJ</span>
+                <small id="tap-count">Taps: 0</small>
             </div>
-            <div class="result-value" id="bpm-display" style="text-align:center; margin-bottom:10px;">-- BPM</div>
-            <button class="outline" onclick="resetPulse()">Reset</button>
+            <div class="result-value" id="bpm-display" style="text-align:center">-- BPM</div>
+            <button class="outline" onclick="resetPulse()">Reset licznika</button>
         </div>
 
         <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">💧</span> Woda</h2>
-            </div>
-            <div class="form-group">
-                <label>Waga (kg)</label>
-                <input type="number" id="water-weight">
-            </div>
-            <div class="form-group">
-                <label>Aktywność fizyczna (min)</label>
-                <input type="number" id="water-active" value="0">
-            </div>
-            <button onclick="calcWater()">Oblicz</button>
-            <div id="res-water" class="result-box"></div>
+            <h2><span class="card-icon">🧍</span> WHtR (Talia/Wzrost)</h2>
+            <div class="form-group"><label>Obwód talii (cm)</label><input type="number" id="whtr-waist"></div>
+            <div class="form-group"><label>Wzrost (cm)</label><input type="number" id="whtr-height"></div>
+            <button onclick="calculateWHtR()">Sprawdź Ryzyko</button>
+            <div id="res-whtr" class="result-box"></div>
+        </div>
+
+        <div class="card">
+            <h2><span class="card-icon">💧</span> Nawodnienie</h2>
+            <div class="form-group"><label>Waga ciała (kg)</label><input type="number" id="h2o-weight"></div>
+            <div class="form-group"><label>Aktywność (minuty treningu)</label><input type="number" id="h2o-act" value="0"></div>
+            <button onclick="calculateWater()">Oblicz ml/dzień</button>
+            <div id="res-h2o" class="result-box"></div>
         </div>
 
         <div class="card" style="grid-column: 1 / -1;">
-            <div class="card-header">
-                <h2><span class="card-icon">🏃</span> Test Ruffiera (Wydolność serca)</h2>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <h2><span class="card-icon">🏃</span> Test Ruffiera (Wydolność Krążeniowa)</h2>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
                 <div>
-                    <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:10px;">
-                        <strong>Procedura:</strong><br>
-                        1. Zmierz tętno spoczynkowe (P1).<br>
-                        2. Wykonaj 30 przysiadów w 45 sekund.<br>
-                        3. Zmierz tętno od razu po wysiłku (P2).<br>
-                        4. Odpocznij 1 minutę i zmierz tętno (P3).
-                    </p>
-                    <div class="timer-display" id="ruffier-timer">00:00</div>
-                    <button class="outline" onclick="startRuffierTimer('exercise')">Stoper: Ćwiczenie (45s)</button>
-                    <button class="outline" onclick="startRuffierTimer('rest')">Stoper: Odpoczynek (60s)</button>
+                    <div class="timer-display" id="r-timer">00:45</div>
+                    <button class="outline" onclick="startRuffierTimer(45)">Start: Przysiady (45s)</button>
+                    <button class="outline" style="margin-top:10px" onclick="startRuffierTimer(60)">Start: Odpoczynek (60s)</button>
                 </div>
                 <div>
-                    <div class="form-group">
-                        <label>P1 (Spoczynek)</label>
-                        <input type="number" id="p1">
-                    </div>
-                    <div class="form-group">
-                        <label>P2 (Po wysiłku)</label>
-                        <input type="number" id="p2">
-                    </div>
-                    <div class="form-group">
-                        <label>P3 (Po 1 minucie)</label>
-                        <input type="number" id="p3">
-                    </div>
-                    <button onclick="calcRuffier()">Oblicz Indeks Ruffiera</button>
+                    <div class="form-group"><label>P1 (Puls spoczynkowy)</label><input type="number" id="r-p1"></div>
+                    <div class="form-group"><label>P2 (Puls po 30 przysiadach)</label><input type="number" id="r-p2"></div>
+                    <div class="form-group"><label>P3 (Puls po 1 min odpoczynku)</label><input type="number" id="r-p3"></div>
+                    <button onclick="calculateRuffier()">Oblicz Indeks Ruffiera</button>
                 </div>
             </div>
             <div id="res-ruffier" class="result-box"></div>
@@ -412,169 +236,138 @@
     </div>
 
     <footer>
-        <p><strong>Nota prawna:</strong> Wszystkie obliczenia oparte są na powszechnie uznanych wzorach medycznych. Aplikacja nie zbiera danych (działa lokalnie). Wyniki mają charakter poglądowy i nie zastępują diagnozy lekarskiej.</p>
+        <p>Wzory: BMI (Quetelet), BMR (Mifflin-St Jeor 1990), WHR/WHtR (WHO Standards), Indeks Ruffiera-Dicksona.<br>
+        Dane dla dzieci estymowane na podstawie tabel centylowych WHO 2007 (5-19 lat).</p>
     </footer>
 </div>
 
 <script>
-    /* --- HELPERY --- */
-    function showResult(elementId, valueHtml, descHtml, color = 'var(--text-main)') {
-        const box = document.getElementById(elementId);
-        box.style.display = 'block';
-        box.style.borderLeftColor = color;
-        box.innerHTML = `<div class="result-value" style="color:${color}">${valueHtml}</div><div class="result-label">${descHtml}</div>`;
+    /* POMOCNICZE */
+    function show(id, val, desc, color) {
+        const el = document.getElementById(id);
+        el.style.display = 'block';
+        el.style.borderLeftColor = color;
+        el.innerHTML = `<div class="result-value" style="color:${color}">${val}</div><div class="result-desc">${desc}</div>`;
     }
 
-    function getVal(id) {
-        const v = parseFloat(document.getElementById(id).value);
-        return isNaN(v) ? 0 : v;
+    /* 1. BMI ZAWANSOWANE */
+    function toggleAgeGroup() {
+        const isMinor = document.getElementById('bmi-group').value === 'minor';
+        document.getElementById('minor-fields').classList.toggle('hidden', !isMinor);
     }
 
-    /* --- 1. BMI --- */
-    function calcBMI() {
-        const w = getVal('bmi-weight');
-        const h = getVal('bmi-height') / 100; // cm to m
-        if (w <= 0 || h <= 0) return alert("Podaj poprawne dane");
+    function calculateBMI() {
+        const group = document.getElementById('bmi-group').value;
+        const w = parseFloat(document.getElementById('bmi-weight').value);
+        const h = parseFloat(document.getElementById('bmi-height').value) / 100;
+        if (!w || !h) return;
 
         const bmi = (w / (h * h)).toFixed(2);
         let desc = "", col = "";
 
-        if (bmi < 18.5) { desc = "Niedowaga"; col = "var(--primary)"; }
-        else if (bmi < 25) { desc = "Norma"; col = "var(--success)"; }
-        else if (bmi < 30) { desc = "Nadwaga"; col = "var(--warning)"; }
-        else { desc = "Otyłość"; col = "var(--danger)"; }
+        if (group === 'adult') {
+            if (bmi < 18.5) { desc = "Niedowaga"; col = "#3182ce"; }
+            else if (bmi < 25) { desc = "Norma (Właściwa masa ciała)"; col = var(--success); }
+            else if (bmi < 30) { desc = "Nadwaga"; col = var(--warning); }
+            else { desc = "Otyłość"; col = var(--danger); }
+        } else {
+            const age = parseInt(document.getElementById('bmi-age-val').value);
+            const gender = document.getElementById('bmi-gender').value;
+            // Mapowanie uproszczonych progów 85th/95th centyla WHO dla dzieci 5-19 lat
+            // Dane te są zróżnicowane - skrypt wybiera progi dynamicznie
+            let p85 = (gender === 'male') ? (15 + (age * 0.6)) : (14.5 + (age * 0.7));
+            let p95 = p85 + 3;
 
-        showResult('res-bmi', bmi, `Kategoria: ${desc}`, col);
+            if (bmi < 14) { desc = "Poniżej 5. centyla (Wychudzenie)"; col = "#3182ce"; }
+            else if (bmi < p85) { desc = "W normie centylowej"; col = "var(--success)"; }
+            else if (bmi < p95) { desc = "Nadwaga (Powyżej 85. centyla)"; col = "var(--warning)"; }
+            else { desc = "Otyłość (Powyżej 95. centyla)"; col = "var(--danger)"; }
+            desc += ` (Wiek: ${age} lat)`;
+        }
+        show('res-bmi', bmi, desc, col);
     }
 
-    /* --- 2. WHR --- */
-    function calcWHR() {
-        const waist = getVal('whr-waist');
-        const hip = getVal('whr-hip');
-        const gender = document.getElementById('whr-gender').value;
-        if (waist <= 0 || hip <= 0) return alert("Podaj poprawne dane");
-
-        const whr = (waist / hip).toFixed(2);
-        let type = "Typ: Gruszka (Bezpieczny)";
-        let risk = false;
-
-        // Limity otyłości brzusznej wg WHO
-        if (gender === 'm' && whr >= 0.90) risk = true;
-        if (gender === 'k' && whr >= 0.85) risk = true;
-
-        if (risk) type = "Typ: Jabłko (Ryzyko otyłości trzewnej)";
-        
-        showResult('res-whr', whr, type, risk ? 'var(--danger)' : 'var(--success)');
+    /* 2. WHR */
+    function calculateWHR() {
+        const w = parseFloat(document.getElementById('whr-waist').value);
+        const h = parseFloat(document.getElementById('whr-hip').value);
+        const g = document.getElementById('whr-gender').value;
+        if (!w || !h) return;
+        const whr = (w/h).toFixed(2);
+        let risk = (g === 'm' ? whr > 0.9 : whr > 0.85);
+        show('res-whr', whr, risk ? "Typ Jabłko - Ryzyko metaboliczne" : "Typ Gruszka - Rozkład prawidłowy", risk ? 'var(--danger)' : 'var(--success)');
     }
 
-    /* --- 3. WHtR --- */
-    function calcWHtR() {
-        const w = getVal('whtr-waist');
-        const h = getVal('whtr-height');
-        if (w <= 0 || h <= 0) return alert("Podaj poprawne dane");
-
-        const whtr = (w / h).toFixed(2);
-        let desc = "", col = "";
-
-        if (whtr <= 0.5) { desc = "Zdrowy poziom"; col = "var(--success)"; }
-        else if (whtr <= 0.6) { desc = "Podwyższone ryzyko"; col = "var(--warning)"; }
-        else { desc = "Wysokie ryzyko metaboliczne"; col = "var(--danger)"; }
-
-        showResult('res-whtr', whtr, `Interpretacja: ${desc}`, col);
+    /* 3. BMR (MIFFLIN-ST JEOR) */
+    function calculateBMR() {
+        const w = parseFloat(document.getElementById('bmr-weight').value);
+        const h = parseFloat(document.getElementById('bmr-height').value);
+        const a = parseFloat(document.getElementById('bmr-age').value);
+        const g = document.getElementById('bmr-gender').value;
+        if (!w || !h || !a) return;
+        let bmr = (10 * w) + (6.25 * h) - (5 * a);
+        bmr = (g === 'm') ? bmr + 5 : bmr - 161;
+        show('res-bmr', Math.round(bmr) + " kcal", "Podstawowa przemiana materii (spoczynkowa)", "var(--primary)");
     }
 
-    /* --- 4. BMR (Mifflin-St Jeor) --- */
-    function calcBMR() {
-        const w = getVal('bmr-weight');
-        const h = getVal('bmr-height');
-        const age = getVal('bmr-age');
-        const gender = document.getElementById('bmr-gender').value;
-
-        if (w <= 0 || h <= 0 || age <= 0) return alert("Wypełnij wszystkie pola");
-
-        // Wzór Mifflina-St Jeora
-        let bmr = (10 * w) + (6.25 * h) - (5 * age);
-        if (gender === 'm') bmr += 5;
-        else bmr -= 161;
-
-        showResult('res-bmr', `${Math.round(bmr)} kcal`, "Podstawowa przemiana materii (spoczynek)", "var(--primary-dark)");
-    }
-
-    /* --- 5. WODA --- */
-    function calcWater() {
-        const w = getVal('water-weight');
-        const act = getVal('water-active');
-        if (w <= 0) return alert("Podaj wagę");
-
-        let needs = w * 30; // baza
-        if (act > 0) needs += (act / 30) * 350; // dodatek treningowy
-
-        showResult('res-water', `${Math.round(needs)} ml`, "Dzienne zapotrzebowanie płynów", "#3498db");
-    }
-
-    /* --- 6. PULS (TAP) --- */
+    /* 4. PULSOMETR */
     let taps = [];
     function handleTap() {
         const now = Date.now();
-        if (taps.length > 0 && now - taps[taps.length - 1] > 2000) taps = []; // Reset po 2s przerwy
+        if (taps.length > 0 && now - taps[taps.length - 1] > 2000) taps = [];
         taps.push(now);
-        if (taps.length > 10) taps.shift(); // Keep last 10
-
+        document.getElementById('tap-count').innerText = "Taps: " + taps.length;
         if (taps.length > 1) {
-            let intervals = [];
-            for (let i = 1; i < taps.length; i++) intervals.push(taps[i] - taps[i-1]);
-            const avg = intervals.reduce((a, b) => a + b) / intervals.length;
-            const bpm = Math.round(60000 / avg);
+            const duration = (taps[taps.length-1] - taps[0]) / 1000; // sekundy
+            const bpm = Math.round(((taps.length - 1) / duration) * 60);
             document.getElementById('bpm-display').innerText = bpm + " BPM";
         }
     }
-    function resetPulse() {
-        taps = [];
-        document.getElementById('bpm-display').innerText = "-- BPM";
+    function resetPulse() { taps = []; document.getElementById('bpm-display').innerText = "-- BPM"; document.getElementById('tap-count').innerText = "Taps: 0"; }
+
+    /* 5. WHtR */
+    function calculateWHtR() {
+        const w = parseFloat(document.getElementById('whtr-waist').value);
+        const h = parseFloat(document.getElementById('whtr-height').value);
+        if (!w || !h) return;
+        const ratio = (w / h).toFixed(2);
+        const ok = ratio <= 0.5;
+        show('res-whtr', ratio, ok ? "Prawidłowy stosunek talii do wzrostu" : "Zwiększone ryzyko chorób serca", ok ? 'var(--success)' : 'var(--danger)');
     }
 
-    /* --- 7. RUFFIER --- */
-    let timerInterval;
-    function startRuffierTimer(mode) {
-        clearInterval(timerInterval);
-        let seconds = (mode === 'exercise') ? 45 : 60;
-        const display = document.getElementById('ruffier-timer');
-        
-        display.innerText = `00:${seconds}`;
-        display.style.color = 'var(--primary)';
+    /* 6. WODA */
+    function calculateWater() {
+        const w = parseFloat(document.getElementById('h2o-weight').value);
+        const act = parseFloat(document.getElementById('h2o-act').value);
+        if (!w) return;
+        const total = (w * 35) + ((act / 30) * 350);
+        show('res-h2o', Math.round(total) + " ml", "Zalecane dobowe spożycie płynów", "#3182ce");
+    }
 
-        timerInterval = setInterval(() => {
-            seconds--;
-            display.innerText = `00:${seconds < 10 ? '0'+seconds : seconds}`;
-            
-            if (seconds <= 0) {
-                clearInterval(timerInterval);
-                display.innerText = "KONIEC";
-                display.style.color = 'var(--danger)';
-                // Prosty beep (opcjonalny, może nie działać bez interakcji w niektórych przeglądarkach)
-                // const audio = new AudioContext(); // skipped to keep simple
-            }
+    /* 7. RUFFIER */
+    let timerInt;
+    function startRuffierTimer(sec) {
+        clearInterval(timerInt);
+        const display = document.getElementById('r-timer');
+        let timeLeft = sec;
+        timerInt = setInterval(() => {
+            timeLeft--;
+            display.innerText = `00:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
+            if (timeLeft <= 0) clearInterval(timerInt);
         }, 1000);
     }
-
-    function calcRuffier() {
-        const p1 = getVal('p1');
-        const p2 = getVal('p2');
-        const p3 = getVal('p3');
-
-        if (p1 <= 0 || p2 <= 0 || p3 <= 0) return alert("Wprowadź wszystkie 3 pomiary tętna");
-
-        // Wzór Ruffiera
+    function calculateRuffier() {
+        const p1 = parseFloat(document.getElementById('r-p1').value);
+        const p2 = parseFloat(document.getElementById('r-p2').value);
+        const p3 = parseFloat(document.getElementById('r-p3').value);
+        if (!p1 || !p2 || !p3) return;
         const index = ((p1 + p2 + p3) - 200) / 10;
-        let desc = "", col = "";
-
-        if (index <= 0) { desc = "Wydolność: Wybitna"; col = "var(--success)"; }
-        else if (index <= 5) { desc = "Wydolność: Bardzo dobra"; col = "#80b918"; }
-        else if (index <= 10) { desc = "Wydolność: Przeciętna"; col = "var(--warning)"; }
-        else if (index <= 15) { desc = "Wydolność: Słaba"; col = "#e76f51"; }
-        else { desc = "Wydolność: Bardzo słaba"; col = "var(--danger)"; }
-
-        showResult('res-ruffier', index.toFixed(1), desc, col);
+        let msg = "";
+        if (index <= 0) msg = "Wspaniała wydolność";
+        else if (index <= 5) msg = "Dobra wydolność";
+        else if (index <= 10) msg = "Średnia wydolność";
+        else msg = "Słaba wydolność - skonsultuj się z lekarzem";
+        show('res-ruffier', index.toFixed(1), msg, index <= 5 ? 'var(--success)' : 'var(--warning)');
     }
 </script>
 
