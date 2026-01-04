@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthApp - Twoje Zdrowie</title>
+    <style>
+        /* Stylizacja CSS - wygląd aplikacji */
+        :root {
+            --primary: #4CAF50;
+            --bg: #f4f4f9;
+            --text: #333;
+        }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        
+        /* Ekrany */
+        .screen { display: none; }
+        .active { display: block; }
+
+        /* Formularze i Karty */
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
+        button:hover { opacity: 0.9; }
+        button.secondary { background: #777; margin-top: 10px; }
+
+        /* Tap Tempo */
+        #tap-area { height: 150px; background: #e8f5e9; border: 2px dashed var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; user-select: none; }
+        
+        /* Nawigacja */
+        nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; }
+        nav button { flex: 1; font-size: 14px; padding: 8px; }
+
+        h2 { margin-top: 0; }
+        .result-box { font-weight: bold; color: var(--primary); margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div id="login-screen" class="screen active">
+        <div class="card">
+            <h2>Witaj w HealthApp</h2>
+            <p>Zaloguj się lub zarejestruj, aby kontynuować.</p>
+            <input type="email" id="email" placeholder="E-mail">
+            <input type="password" id="password" placeholder="Hasło">
+            <button onclick="app.login()">Zaloguj / Zarejestruj</button>
+            <p style="font-size: 12px; color: #666; margin-top: 10px;">*Uwaga: To wersja demo. Dane są zapisywane tylko w Twojej przeglądarce.</p>
+        </div>
+    </div>
+
+    <div id="app-screen" class="screen">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 id="user-display">Witaj!</h3>
+            <button onclick="app.logout()" style="width: auto; background: #d9534f; padding: 5px 10px; font-size: 12px;">Wyloguj</button>
+        </header>
+
+        <nav>
+            <button onclick="app.showTab('profil')">Profil (BMI)</button>
+            <button onclick="app.showTab('dziennik')">Dziennik</button>
+            <button onclick="app.showTab('taptempo')">Puls (Tap)</button>
+            <button onclick="app.showTab('pomiary')">Pomiary</button>
+        </nav>
+
+        <div id="tab-profil" class="tab-content">
+            <div class="card">
+                <h2>Profil i BMI</h2>
+                <label>Wzrost (cm):</label>
+                <input type="number" id="height" placeholder="np. 180">
+                <label>Płeć:</label>
+                <select id="gender">
+                    <option value="m">Mężczyzna</option>
+                    <option value="k">Kobieta</option>
+                </select>
+                <button onclick="app.saveProfile()">Zapisz i Oblicz BMI</button>
+                <div id="bmi-result" class="result-box"></div>
+            </div>
+        </div>
+
+        <div id="tab-dziennik" class="tab-content" style="display:none;">
+            <div class="card">
+                <h2>Twój Pamiętnik</h2>
+                <textarea id="diary-entry" rows="4" placeholder="Jak się dzisiaj czujesz?"></textarea>
+                <button onclick="app.saveDiary()">Zapisz wpis</button>
+            </div>
+            <div id="diary-history">
+                </div>
+        </div>
+
+        <div id="tab-taptempo" class="tab-content" style="display:none;">
+            <div class="card">
+                <h2>Tap Tempo (Puls)</h2>
+                <p>Klikaj w obszar poniżej w rytmie swojego tętna.</p>
+                <div id="tap-area" onclick="app.tap()">TAPNIJ TUTAJ</div>
+                <div style="margin-top: 15px;">
+                    Średnie BPM: <span id="bpm-display" style="font-size: 24px; font-weight: bold;">0</span>
+                </div>
+                <button class="secondary" onclick="app.resetTap()">Resetuj</button>
+            </div>
+        </div>
+
+        <div id="tab-pomiary" class="tab-content" style="display:none;">
+            <div class="card">
+                <h2>Dodaj Pomiar</h2>
+                <input type="date" id="measure-date">
+                
+                <label>Waga (kg):</label>
+                <input type="number" id="weight" placeholder="np. 75">
+                
+                <label>Ciśnienie (skurczowe/rozkurczowe):</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="bp-sys" placeholder="120">
+                    <input type="number" id="bp-dia" placeholder="80">
+                </div>
+
+                <label>Kroki (odczyt z telefonu niemożliwy w web):</label>
+                <input type="number" id="steps" placeholder="Wpisz liczbę kroków">
+
+                <button onclick="app.saveMeasurement()">Zapisz pomiar</button>
+            </div>
+            
+            <div class="card">
+                <h3>Ostatnie pomiary</h3>
+                <ul id="measure-history" style="list-style: none; padding: 0;"></ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // LOGIKA APLIKACJI (JavaScript)
+    const app = {
+        data: {
+            user: null,
+            taps: [],
+            lastTapTime: 0
+        },
+
+        init: function() {
+            // Sprawdź czy użytkownik jest już zalogowany w pamięci przeglądarki
+            const savedUser = localStorage.getItem('healthApp_user');
+            if (savedUser) {
+                this.data.user = savedUser;
+                this.showApp();
+            }
+            // Ustaw dzisiejszą datę
+            document.getElementById('measure-date').valueAsDate = new Date();
+        },
+
+        login: function() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            
+            if(email && pass) {
+                // Symulacja logowania
+                this.data.user = email;
+                localStorage.setItem('healthApp_user', email);
+                this.showApp();
+            } else {
+                alert("Podaj email i hasło");
+            }
+        },
+
+        logout: function() {
+            localStorage.removeItem('healthApp_user');
+            location.reload();
+        },
+
+        showApp: function() {
+            document.getElementById('login-screen').classList.remove('active');
+            document.getElementById('app-screen').classList.add('active');
+            document.getElementById('user-display').innerText = "Witaj, " + this.data.user;
+            this.loadHistory();
+        },
+
+        showTab: function(tabName) {
+            // Ukryj wszystkie zakładki
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            // Pokaż wybraną
+            document.getElementById('tab-' + tabName).style.display = 'block';
+        },
+
+        // --- BMI i PROFIL ---
+        saveProfile: function() {
+            const height = parseFloat(document.getElementById('height').value);
+            // Pobieramy wagę z ostatniego pomiaru lub prosimy o wpisanie w zakładce pomiary
+            // Dla uproszczenia tutaj przyjmijmy, że BMI liczymy dynamicznie przy podawaniu wagi w pomiarach,
+            // ale tutaj zapiszemy wzrost do localStorage.
+            if(height) {
+                localStorage.setItem('healthApp_height', height);
+                alert("Wzrost zapisany!");
+            }
+        },
+
+        calculateBMI: function(weight) {
+            const heightCm = localStorage.getItem('healthApp_height');
+            if(weight && heightCm) {
+                const heightM = heightCm / 100;
+                const bmi = (weight / (heightM * heightM)).toFixed(2);
+                document.getElementById('bmi-result').innerText = `Twoje BMI: ${bmi}`;
+                return bmi;
+            }
+            return null;
+        },
+
+        // --- TAP TEMPO ---
+        tap: function() {
+            const now = Date.now();
+            if (this.data.lastTapTime !== 0) {
+                const diff = now - this.data.lastTapTime;
+                // Resetuj jeśli przerwa dłuższa niż 2 sekundy
+                if (diff > 2000) { 
+                    this.data.taps = []; 
+                } else {
+                    this.data.taps.push(diff);
+                }
+            }
+            this.data.lastTapTime = now;
+
+            if (this.data.taps.length > 1) {
+                // Oblicz średnią
+                const avgDiff = this.data.taps.reduce((a, b) => a + b) / this.data.taps.length;
+                const bpm = Math.round(60000 / avgDiff);
+                document.getElementById('bpm-display').innerText = bpm;
+                
+                // Animacja
+                const area = document.getElementById('tap-area');
+                area.style.backgroundColor = '#c8e6c9';
+                setTimeout(() => area.style.backgroundColor = '#e8f5e9', 100);
+            }
+        },
+
+        resetTap: function() {
+            this.data.taps = [];
+            this.data.lastTapTime = 0;
+            document.getElementById('bpm-display').innerText = '0';
+        },
+
+        // --- DZIENNIK ---
+        saveDiary: function() {
+            const entry = document.getElementById('diary-entry').value;
+            if(!entry) return;
+            
+            const logs = JSON.parse(localStorage.getItem('healthApp_diary') || '[]');
+            logs.unshift({ date: new Date().toLocaleString(), text: entry });
+            localStorage.setItem('healthApp_diary', JSON.stringify(logs));
+            
+            document.getElementById('diary-entry').value = '';
+            this.renderDiary(logs);
+        },
+
+        renderDiary: function(logs) {
+            const container = document.getElementById('diary-history');
+            container.innerHTML = logs.map(log => 
+                `<div class="card" style="padding:10px; margin-bottom:10px; background:#fff;">
+                    <small>${log.date}</small><p>${log.text}</p>
+                </div>`
+            ).join('');
+        },
+
+        // --- POMIARY ---
+        saveMeasurement: function() {
+            const weight = document.getElementById('weight').value;
+            const steps = document.getElementById('steps').value;
+            const sys = document.getElementById('bp-sys').value;
+            const dia = document.getElementById('bp-dia').value;
+            const date = document.getElementById('measure-date').value;
+
+            const measure = { date, weight, steps, bp: `${sys}/${dia}` };
+            
+            const measures = JSON.parse(localStorage.getItem('healthApp_measures') || '[]');
+            measures.unshift(measure);
+            localStorage.setItem('healthApp_measures', JSON.stringify(measures));
+
+            // Przelicz BMI jeśli podano wagę
+            if(weight) this.calculateBMI(weight);
+
+            this.renderMeasures(measures);
+            alert("Pomiar zapisany");
+        },
+
+        renderMeasures: function(data) {
+            const list = document.getElementById('measure-history');
+            list.innerHTML = data.map(m => 
+                `<li style="border-bottom:1px solid #eee; padding:5px 0;">
+                    <strong>${m.date}</strong>: 
+                    ${m.weight ? m.weight + 'kg' : ''} 
+                    ${m.steps ? '| ' + m.steps + ' kroków' : ''}
+                    ${m.bp !== '/' ? '| BP: ' + m.bp : ''}
+                </li>`
+            ).join('');
+        },
+
+        loadHistory: function() {
+            const diaryLogs = JSON.parse(localStorage.getItem('healthApp_diary') || '[]');
+            this.renderDiary(diaryLogs);
+            
+            const measures = JSON.parse(localStorage.getItem('healthApp_measures') || '[]');
+            this.renderMeasures(measures);
+        }
+    };
+
+    // Uruchom aplikację
+    app.init();
+</script>
+
+</body>
+</html>
