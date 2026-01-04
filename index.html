@@ -3,308 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HealthApp - Twoje Zdrowie</title>
+    <title>HealthCheck - Twoje Centrum Zdrowia</title>
     <style>
-        /* Stylizacja CSS - wygląd aplikacji */
         :root {
-            --primary: #4CAF50;
-            --bg: #f4f4f9;
-            --text: #333;
+            --primary: #2A9D8F; /* Morski turkus - kojarzy się ze zdrowiem */
+            --secondary: #264653;
+            --bg: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        header h1 {
+            color: var(--secondary);
+            font-weight: 300;
+            font-size: 2.5rem;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            color: var(--text-light);
+        }
+
+        /* Grid dla kart */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Styl kart */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Formularze */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #21867a;
+        }
+
+        button.secondary-btn {
+            background-color: transparent;
+            color: var(--text-light);
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
         
-        /* Ekrany */
-        .screen { display: none; }
-        .active { display: block; }
+        button.secondary-btn:hover {
+            background-color: #f0f0f0;
+        }
 
-        /* Formularze i Karty */
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        button { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
-        button:hover { opacity: 0.9; }
-        button.secondary { background: #777; margin-top: 10px; }
+        /* Wyniki */
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0fdfa;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            display: none; /* Domyślnie ukryte */
+        }
 
-        /* Tap Tempo */
-        #tap-area { height: 150px; background: #e8f5e9; border: 2px dashed var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; user-select: none; }
-        
-        /* Nawigacja */
-        nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; }
-        nav button { flex: 1; font-size: 14px; padding: 8px; }
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
 
-        h2 { margin-top: 0; }
-        .result-box { font-weight: bold; color: var(--primary); margin-top: 10px; }
+        .result-desc {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Specyficzne dla Pulsometru */
+        #tap-area {
+            height: 120px;
+            background-color: #f8f9fa;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 15px;
+            transition: background 0.1s;
+        }
+
+        #tap-area:active {
+            background-color: #e9ecef;
+            border-color: var(--primary);
+        }
+
+        .pulse-animation {
+            animation: pulse-effect 0.2s ease-out;
+        }
+
+        @keyframes pulse-effect {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #999;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <header>
+        <h1>HealthCheck</h1>
+        <p>Minimalistyczny zestaw narzędzi do monitorowania parametrów zdrowotnych.</p>
+    </header>
 
-    <div id="login-screen" class="screen active">
+    <div class="grid">
         <div class="card">
-            <h2>Witaj w HealthApp</h2>
-            <p>Zaloguj się lub zarejestruj, aby kontynuować.</p>
-            <input type="email" id="email" placeholder="E-mail">
-            <input type="password" id="password" placeholder="Hasło">
-            <button onclick="app.login()">Zaloguj / Zarejestruj</button>
-            <p style="font-size: 12px; color: #666; margin-top: 10px;">*Uwaga: To wersja demo. Dane są zapisywane tylko w Twojej przeglądarce.</p>
-        </div>
-    </div>
-
-    <div id="app-screen" class="screen">
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 id="user-display">Witaj!</h3>
-            <button onclick="app.logout()" style="width: auto; background: #d9534f; padding: 5px 10px; font-size: 12px;">Wyloguj</button>
-        </header>
-
-        <nav>
-            <button onclick="app.showTab('profil')">Profil (BMI)</button>
-            <button onclick="app.showTab('dziennik')">Dziennik</button>
-            <button onclick="app.showTab('taptempo')">Puls (Tap)</button>
-            <button onclick="app.showTab('pomiary')">Pomiary</button>
-        </nav>
-
-        <div id="tab-profil" class="tab-content">
-            <div class="card">
-                <h2>Profil i BMI</h2>
-                <label>Wzrost (cm):</label>
-                <input type="number" id="height" placeholder="np. 180">
-                <label>Płeć:</label>
-                <select id="gender">
-                    <option value="m">Mężczyzna</option>
-                    <option value="k">Kobieta</option>
-                </select>
-                <button onclick="app.saveProfile()">Zapisz i Oblicz BMI</button>
-                <div id="bmi-result" class="result-box"></div>
+            <h2>Kalkulator BMI <span>⚖️</span></h2>
+            <div class="form-group">
+                <label for="bmi-weight">Waga (kg)</label>
+                <input type="number" id="bmi-weight" placeholder="np. 70">
             </div>
-        </div>
-
-        <div id="tab-dziennik" class="tab-content" style="display:none;">
-            <div class="card">
-                <h2>Twój Pamiętnik</h2>
-                <textarea id="diary-entry" rows="4" placeholder="Jak się dzisiaj czujesz?"></textarea>
-                <button onclick="app.saveDiary()">Zapisz wpis</button>
+            <div class="form-group">
+                <label for="bmi-height">Wzrost (cm)</label>
+                <input type="number" id="bmi-height" placeholder="np. 175">
             </div>
-            <div id="diary-history">
-                </div>
-        </div>
-
-        <div id="tab-taptempo" class="tab-content" style="display:none;">
-            <div class="card">
-                <h2>Tap Tempo (Puls)</h2>
-                <p>Klikaj w obszar poniżej w rytmie swojego tętna.</p>
-                <div id="tap-area" onclick="app.tap()">TAPNIJ TUTAJ</div>
-                <div style="margin-top: 15px;">
-                    Średnie BPM: <span id="bpm-display" style="font-size: 24px; font-weight: bold;">0</span>
-                </div>
-                <button class="secondary" onclick="app.resetTap()">Resetuj</button>
-            </div>
-        </div>
-
-        <div id="tab-pomiary" class="tab-content" style="display:none;">
-            <div class="card">
-                <h2>Dodaj Pomiar</h2>
-                <input type="date" id="measure-date">
-                
-                <label>Waga (kg):</label>
-                <input type="number" id="weight" placeholder="np. 75">
-                
-                <label>Ciśnienie (skurczowe/rozkurczowe):</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="number" id="bp-sys" placeholder="120">
-                    <input type="number" id="bp-dia" placeholder="80">
-                </div>
-
-                <label>Kroki (odczyt z telefonu niemożliwy w web):</label>
-                <input type="number" id="steps" placeholder="Wpisz liczbę kroków">
-
-                <button onclick="app.saveMeasurement()">Zapisz pomiar</button>
-            </div>
+            <button onclick="calculateBMI()">Oblicz BMI</button>
             
-            <div class="card">
-                <h3>Ostatnie pomiary</h3>
-                <ul id="measure-history" style="list-style: none; padding: 0;"></ul>
+            <div id="bmi-result" class="result-box">
+                <div class="result-value" id="bmi-value">0</div>
+                <div class="result-desc" id="bmi-desc">Norma</div>
             </div>
         </div>
 
+        <div class="card">
+            <h2>Pulsometr (Tap) <span>❤️</span></h2>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
+                Instrukcja: Znajdź swój puls na nadgarstku lub szyi. Klikaj w szare pole rytmicznie z każdym uderzeniem serca przez ok. 10 sekund.
+            </p>
+            <div id="tap-area" onclick="handleTap()">
+                <span id="tap-text">Klikaj tutaj w rytm serca</span>
+            </div>
+            <div class="result-value" style="text-align: center;" id="bpm-display">-- BPM</div>
+            <button class="secondary-btn" onclick="resetPulse()">Resetuj licznik</button>
+        </div>
+
+        <div class="card">
+            <h2>Zapotrzebowanie na wodę <span>💧</span></h2>
+            <div class="form-group">
+                <label for="water-weight">Waga (kg)</label>
+                <input type="number" id="water-weight" placeholder="np. 70">
+            </div>
+            <div class="form-group">
+                <label for="water-activity">Czas aktywności fizycznej (min)</label>
+                <input type="number" id="water-activity" value="0" placeholder="np. 30">
+            </div>
+            <button onclick="calculateWater()">Oblicz</button>
+
+            <div id="water-result" class="result-box">
+                <div class="result-value" id="water-value">0 ml</div>
+                <div class="result-desc">Dzienne szacunkowe zapotrzebowanie</div>
+            </div>
+        </div>
     </div>
+
+    <footer>
+        <p><strong>Uwaga:</strong> Ta strona służy wyłącznie celom informacyjnym i nie zastępuje profesjonalnej porady medycznej. Algorytmy opierają się na ogólnych wzorach (BMI wg WHO, woda wg przelicznika 30ml/kg).</p>
+    </footer>
 </div>
 
 <script>
-    // LOGIKA APLIKACJI (JavaScript)
-    const app = {
-        data: {
-            user: null,
-            taps: [],
-            lastTapTime: 0
-        },
+    /* --- LOGIKA BMI --- */
+    function calculateBMI() {
+        const weight = parseFloat(document.getElementById('bmi-weight').value);
+        const heightCm = parseFloat(document.getElementById('bmi-height').value);
+        const resultBox = document.getElementById('bmi-result');
+        const valueDisplay = document.getElementById('bmi-value');
+        const descDisplay = document.getElementById('bmi-desc');
 
-        init: function() {
-            // Sprawdź czy użytkownik jest już zalogowany w pamięci przeglądarki
-            const savedUser = localStorage.getItem('healthApp_user');
-            if (savedUser) {
-                this.data.user = savedUser;
-                this.showApp();
-            }
-            // Ustaw dzisiejszą datę
-            document.getElementById('measure-date').valueAsDate = new Date();
-        },
-
-        login: function() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            
-            if(email && pass) {
-                // Symulacja logowania
-                this.data.user = email;
-                localStorage.setItem('healthApp_user', email);
-                this.showApp();
-            } else {
-                alert("Podaj email i hasło");
-            }
-        },
-
-        logout: function() {
-            localStorage.removeItem('healthApp_user');
-            location.reload();
-        },
-
-        showApp: function() {
-            document.getElementById('login-screen').classList.remove('active');
-            document.getElementById('app-screen').classList.add('active');
-            document.getElementById('user-display').innerText = "Witaj, " + this.data.user;
-            this.loadHistory();
-        },
-
-        showTab: function(tabName) {
-            // Ukryj wszystkie zakładki
-            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-            // Pokaż wybraną
-            document.getElementById('tab-' + tabName).style.display = 'block';
-        },
-
-        // --- BMI i PROFIL ---
-        saveProfile: function() {
-            const height = parseFloat(document.getElementById('height').value);
-            // Pobieramy wagę z ostatniego pomiaru lub prosimy o wpisanie w zakładce pomiary
-            // Dla uproszczenia tutaj przyjmijmy, że BMI liczymy dynamicznie przy podawaniu wagi w pomiarach,
-            // ale tutaj zapiszemy wzrost do localStorage.
-            if(height) {
-                localStorage.setItem('healthApp_height', height);
-                alert("Wzrost zapisany!");
-            }
-        },
-
-        calculateBMI: function(weight) {
-            const heightCm = localStorage.getItem('healthApp_height');
-            if(weight && heightCm) {
-                const heightM = heightCm / 100;
-                const bmi = (weight / (heightM * heightM)).toFixed(2);
-                document.getElementById('bmi-result').innerText = `Twoje BMI: ${bmi}`;
-                return bmi;
-            }
-            return null;
-        },
-
-        // --- TAP TEMPO ---
-        tap: function() {
-            const now = Date.now();
-            if (this.data.lastTapTime !== 0) {
-                const diff = now - this.data.lastTapTime;
-                // Resetuj jeśli przerwa dłuższa niż 2 sekundy
-                if (diff > 2000) { 
-                    this.data.taps = []; 
-                } else {
-                    this.data.taps.push(diff);
-                }
-            }
-            this.data.lastTapTime = now;
-
-            if (this.data.taps.length > 1) {
-                // Oblicz średnią
-                const avgDiff = this.data.taps.reduce((a, b) => a + b) / this.data.taps.length;
-                const bpm = Math.round(60000 / avgDiff);
-                document.getElementById('bpm-display').innerText = bpm;
-                
-                // Animacja
-                const area = document.getElementById('tap-area');
-                area.style.backgroundColor = '#c8e6c9';
-                setTimeout(() => area.style.backgroundColor = '#e8f5e9', 100);
-            }
-        },
-
-        resetTap: function() {
-            this.data.taps = [];
-            this.data.lastTapTime = 0;
-            document.getElementById('bpm-display').innerText = '0';
-        },
-
-        // --- DZIENNIK ---
-        saveDiary: function() {
-            const entry = document.getElementById('diary-entry').value;
-            if(!entry) return;
-            
-            const logs = JSON.parse(localStorage.getItem('healthApp_diary') || '[]');
-            logs.unshift({ date: new Date().toLocaleString(), text: entry });
-            localStorage.setItem('healthApp_diary', JSON.stringify(logs));
-            
-            document.getElementById('diary-entry').value = '';
-            this.renderDiary(logs);
-        },
-
-        renderDiary: function(logs) {
-            const container = document.getElementById('diary-history');
-            container.innerHTML = logs.map(log => 
-                `<div class="card" style="padding:10px; margin-bottom:10px; background:#fff;">
-                    <small>${log.date}</small><p>${log.text}</p>
-                </div>`
-            ).join('');
-        },
-
-        // --- POMIARY ---
-        saveMeasurement: function() {
-            const weight = document.getElementById('weight').value;
-            const steps = document.getElementById('steps').value;
-            const sys = document.getElementById('bp-sys').value;
-            const dia = document.getElementById('bp-dia').value;
-            const date = document.getElementById('measure-date').value;
-
-            const measure = { date, weight, steps, bp: `${sys}/${dia}` };
-            
-            const measures = JSON.parse(localStorage.getItem('healthApp_measures') || '[]');
-            measures.unshift(measure);
-            localStorage.setItem('healthApp_measures', JSON.stringify(measures));
-
-            // Przelicz BMI jeśli podano wagę
-            if(weight) this.calculateBMI(weight);
-
-            this.renderMeasures(measures);
-            alert("Pomiar zapisany");
-        },
-
-        renderMeasures: function(data) {
-            const list = document.getElementById('measure-history');
-            list.innerHTML = data.map(m => 
-                `<li style="border-bottom:1px solid #eee; padding:5px 0;">
-                    <strong>${m.date}</strong>: 
-                    ${m.weight ? m.weight + 'kg' : ''} 
-                    ${m.steps ? '| ' + m.steps + ' kroków' : ''}
-                    ${m.bp !== '/' ? '| BP: ' + m.bp : ''}
-                </li>`
-            ).join('');
-        },
-
-        loadHistory: function() {
-            const diaryLogs = JSON.parse(localStorage.getItem('healthApp_diary') || '[]');
-            this.renderDiary(diaryLogs);
-            
-            const measures = JSON.parse(localStorage.getItem('healthApp_measures') || '[]');
-            this.renderMeasures(measures);
+        if (!weight || !heightCm || weight <= 0 || heightCm <= 0) {
+            alert("Proszę podać prawidłową wagę i wzrost.");
+            return;
         }
-    };
 
-    // Uruchom aplikację
-    app.init();
+        // Konwersja cm na metry
+        const heightM = heightCm / 100;
+        // Wzór: kg / m^2
+        const bmi = (weight / (heightM * heightM)).toFixed(1);
+
+        let desc = "";
+        let color = "";
+
+        if (bmi < 18.5) {
+            desc = "Niedowaga";
+            color = "#3498db";
+        } else if (bmi >= 18.5 && bmi < 25) {
+            desc = "Waga prawidłowa";
+            color = "#2A9D8F";
+        } else if (bmi >= 25 && bmi < 30) {
+            desc = "Nadwaga";
+            color = "#f39c12";
+        } else {
+            desc = "Otyłość";
+            color = "#e74c3c";
+        }
+
+        valueDisplay.textContent = bmi;
+        descDisplay.textContent = desc;
+        descDisplay.style.color = color;
+        resultBox.style.display = "block";
+    }
+
+    /* --- LOGIKA PULSOMETRU (TAP TEMPO) --- */
+    let taps = [];
+    const TIMEOUT = 2000; // Resetuj, jeśli przerwa > 2 sekundy
+
+    function handleTap() {
+        const now = Date.now();
+        const tapArea = document.getElementById('tap-area');
+        
+        // Efekt wizualny
+        tapArea.classList.remove('pulse-animation');
+        void tapArea.offsetWidth; // trigger reflow
+        tapArea.classList.add('pulse-animation');
+
+        // Reset jeśli długa przerwa
+        if (taps.length > 0 && now - taps[taps.length - 1] > TIMEOUT) {
+            taps = [];
+        }
+
+        taps.push(now);
+
+        // Zachowaj tylko ostatnie 10 kliknięć dla lepszej średniej ruchomej
+        if (taps.length > 10) {
+            taps.shift();
+        }
+
+        updateBPM();
+    }
+
+    function updateBPM() {
+        const bpmDisplay = document.getElementById('bpm-display');
+        const tapText = document.getElementById('tap-text');
+
+        if (taps.length < 2) {
+            tapText.textContent = "Klikaj dalej...";
+            bpmDisplay.textContent = "-- BPM";
+            return;
+        }
+
+        // Oblicz średni odstęp między stuknięciami
+        let intervals = [];
+        for (let i = 1; i < taps.length; i++) {
+            intervals.push(taps[i] - taps[i-1]);
+        }
+
+        let averageInterval = intervals.reduce((a, b) => a + b) / intervals.length;
+        
+        // 60000 ms w minucie / średni interwał w ms
+        let bpm = Math.round(60000 / averageInterval);
+
+        bpmDisplay.textContent = bpm + " BPM";
+        tapText.textContent = "Utrzymuj rytm...";
+    }
+
+    function resetPulse() {
+        taps = [];
+        document.getElementById('bpm-display').textContent = "-- BPM";
+        document.getElementById('tap-text').textContent = "Klikaj tutaj w rytm serca";
+    }
+
+    /* --- LOGIKA WODY (Dodatkowa) --- */
+    function calculateWater() {
+        const weight = parseFloat(document.getElementById('water-weight').value);
+        const activity = parseFloat(document.getElementById('water-activity').value) || 0;
+        const resultBox = document.getElementById('water-result');
+        const valueDisplay = document.getElementById('water-value');
+
+        if (!weight || weight <= 0) {
+            alert("Proszę podać wagę.");
+            return;
+        }
+
+        // Prosty wzór: 30ml na każdy kg masy ciała
+        let waterNeed = weight * 30;
+
+        // Dodatek za aktywność: ok 350ml na każde 30 min aktywności (uśrednione)
+        if (activity > 0) {
+            waterNeed += (activity / 30) * 350;
+        }
+
+        valueDisplay.textContent = Math.round(waterNeed) + " ml";
+        resultBox.style.display = "block";
+    }
 </script>
 
 </body>
