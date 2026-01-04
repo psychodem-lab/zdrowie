@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HealthCheck Pro - Zaawansowana Diagnostyka</title>
+    <title>Szlachetne Zdrowie</title>
     <style>
         :root {
             /* Paleta kolorów - Clinical Clean */
@@ -382,12 +382,12 @@
                     <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:10px;">
                         <strong>Procedura:</strong><br>
                         1. Zmierz tętno spoczynkowe (P1).<br>
-                        2. Wykonaj 30 przysiadów w 45 sekund.<br>
+                        2. Wykonaj 30 przysiadów w 60 sekund.<br>
                         3. Zmierz tętno od razu po wysiłku (P2).<br>
                         4. Odpocznij 1 minutę i zmierz tętno (P3).
                     </p>
                     <div class="timer-display" id="ruffier-timer">00:00</div>
-                    <button class="outline" onclick="startRuffierTimer('exercise')">Stoper: Ćwiczenie (45s)</button>
+                    <button class="outline" onclick="startRuffierTimer('exercise')">Stoper: Ćwiczenie (60s)</button>
                     <button class="outline" onclick="startRuffierTimer('rest')">Stoper: Odpoczynek (60s)</button>
                 </div>
                 <div>
@@ -537,7 +537,7 @@
     let timerInterval;
     function startRuffierTimer(mode) {
         clearInterval(timerInterval);
-        let seconds = (mode === 'exercise') ? 45 : 60;
+        let seconds = (mode === 'exercise') ? 60 : 60;
         const display = document.getElementById('ruffier-timer');
         
         display.innerText = `00:${seconds}`;
