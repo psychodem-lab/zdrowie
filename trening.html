@@ -123,12 +123,254 @@
 <script>
     // Tutaj możesz dodać wszystkie 25 ćwiczeń
     const exercises = [
-        { title: "Pajacyki", reps: "30 sekund", desc: "Dynamiczne skoki z unoszeniem rąk.", img: "https://via.placeholder.com/400x200?text=Pajacyki" },
-        { title: "Przysiady", reps: "20 powtórzeń", desc: "Trzymaj plecy proste, pięty przyklejone do podłogi.", img: "https://via.placeholder.com/400x200?text=Przysiady" },
-        { title: "Pompki", reps: "12 powtórzeń", desc: "Schodź klatką nisko, trzymaj napięty brzuch.", img: "https://via.placeholder.com/400x200?text=Pompki" },
-        { title: "Plank (Deska)", reps: "45 sekund", desc: "Podpór na przedramionach. Ciało w linii prostej.", img: "https://via.placeholder.com/400x200?text=Plank" },
-        { title: "Wykroki", reps: "10 na nogę", desc: "Rób duży krok w przód, kolano nie dotyka ziemi.", img: "https://via.placeholder.com/400x200?text=Wykroki" },
-        // ... dopisz tutaj pozostałe 20 ćwiczeń w tym samym formacie
+[
+  {
+    "title": "Kółeczka stopami [cite: 8]",
+    "reps": "10x na zewnątrz i 10x do wewnątrz [cite: 8]",
+    "desc": "Pw. leżenie tyłem, kółeczka stopami. [cite: 8]",
+    "img": "https://via.placeholder.com/400x200?text=Kółeczka+stopami"
+  },
+  {
+    "title": "Zginanie stóp [cite: 9]",
+    "reps": "10x [cite: 9]",
+    "desc": "Pw. leżenie tyłem, zginanie grzbietowe i podeszwowe stóp. [cite: 9]",
+    "img": "https://via.placeholder.com/400x200?text=Zginanie+stóp"
+  },
+  {
+    "title": "Skręcanie stóp [cite: 10]",
+    "reps": "10-15x [cite: 11]",
+    "desc": "Pw. leżenie tyłem, nogi rozszerzone 50-60 cm, skręcanie stóp do środka i na zewnątrz. [cite: 10, 11]",
+    "img": "https://via.placeholder.com/400x200?text=Skręcanie+stóp"
+  },
+  {
+    "title": "Naprzemienne zginanie nóg [cite: 12]",
+    "reps": "10x [cite: 12]",
+    "desc": "Pw. leżenie tyłem, naprzemienne zginanie kończyn dolnych w stawach biodrowych i kolanowych, suwając piętą po materacu. [cite: 12]",
+    "img": "https://via.placeholder.com/400x200?text=Naprzemienne+zginanie+nóg"
+  },
+  {
+    "title": "Ćwiczenie oddechowe z KKG [cite: 13]",
+    "reps": "3-4x [cite: 14]",
+    "desc": "Pw. leżenie tyłem, KKG splecione na brzuchu, przenosimy ręce za głowę z jednoczesnym wdechem nosem, powrót do pozycji wyjściowej wydech ustami. [cite: 13, 14]",
+    "img": "https://via.placeholder.com/400x200?text=Oddech+z+rekami"
+  },
+  {
+    "title": "Odwodzenie nóg [cite: 15]",
+    "reps": "Po 10x na każdą KKD [cite: 15]",
+    "desc": "Pw. leżenie tyłem, odwodzenie i przywodzenie naprzemienne nóg w bok. [cite: 15]",
+    "img": "https://via.placeholder.com/400x200?text=Odwodzenie+nóg"
+  },
+  {
+    "title": "Rozrywanie rąk [cite: 16]",
+    "reps": "10x [cite: 16]",
+    "desc": "Pw. leżenie tyłe, ręce „haczyki” przed klatką piersiową, rozrywanie rąk (wytrzymać 5 sekund). [cite: 16]",
+    "img": "https://via.placeholder.com/400x200?text=Rozrywanie+rąk"
+  },
+  {
+    "title": "Rozchylanie kolan [cite: 17, 18]",
+    "reps": "10-15x [cite: 18]",
+    "desc": "Pw. leżenie tyłem, KKD zgięte w stawach biodrowych i kolanowych, stopy oparte o materac, ręce splecione na karku. Rozchylanie kolan na zewnątrz do granicy bólu, a następnie łączenie kolan. [cite: 17, 18]",
+    "img": "https://via.placeholder.com/400x200?text=Rozchylanie+kolan"
+  },
+  {
+    "title": "Unoszenie głowy [cite: 19, 20]",
+    "reps": "10x [cite: 20]",
+    "desc": "Pw. leżenie tyłem, KKD zgięte, stopy oparte o materac, ręce wzdłuż tułowia. Unoszenie głowy z jednoczesnym dotknięciem brodą do klatki piersiowej, wytrzymać 3 sek. [cite: 19, 20]",
+    "img": "https://via.placeholder.com/400x200?text=Unoszenie+głowy"
+  },
+  {
+    "title": "Unoszenie bioder [cite: 21, 22]",
+    "reps": "10x [cite: 22]",
+    "desc": "Pw. leżenie tyłem, KKD zgięte, stopy oparte o materac, ręce wzdłuż tułowia. Unoszenie bioder z oderwaniem pośladków od podłoża, wytrzymać 3 sek. [cite: 21, 22]",
+    "img": "https://via.placeholder.com/400x200?text=Unoszenie+bioder"
+  },
+  {
+    "title": "Dotykanie kolanami podłoża [cite: 23, 24]",
+    "reps": "Brak danych [cite: 24]",
+    "desc": "Pw. leżenie tyłem, nogi odwiedzione, zgięte w stawach biodrowych i kolanowych. Naprzemienne dotykanie kolanami podłoża między nogami. [cite: 23, 24]",
+    "img": "https://via.placeholder.com/400x200?text=Dotykanie+kolanami"
+  },
+  {
+    "title": "Wciskanie łokci [cite: 25]",
+    "reps": "3-4x [cite: 26]",
+    "desc": "Pw. leżenie tyłem, ręce splecione na karku. Rozchylanie KKG z jednoczesnym wciskaniem ich do materaca (wdech), łączenie łokci (wydech). [cite: 25]",
+    "img": "https://via.placeholder.com/400x200?text=Wciskanie+łokci"
+  },
+  {
+    "title": "Prostowanie kolan do materaca [cite: 27]",
+    "reps": "10x [cite: 28]",
+    "desc": "Pw. leżenie tyłem, mocne prostowanie kolan z próbą wciśnięcia ich do materaca, przytrzymać 5 sekund. [cite: 27, 28]",
+    "img": "https://via.placeholder.com/400x200?text=Prostowanie+kolan"
+  },
+  {
+    "title": "Prostowanie kolan na wałku [cite: 29]",
+    "reps": "10x [cite: 30]",
+    "desc": "Pw. leżenie tyłem, duży wałek pod kolanami, prostowanie KKD w stawach kolanowych, wytrzymać 5 sekund. [cite: 29, 30]",
+    "img": "https://via.placeholder.com/400x200?text=Prostowanie+na+wałku"
+  },
+  {
+    "title": "Naciskanie dłoni [cite: 30, 31]",
+    "reps": "5-10x [cite: 31]",
+    "desc": "Pw. leżenie tyłem, nogi wyprostowane, ręce złożone jak do modlitwy, łokcie na zewnątrz. Jednoczesne naciskanie jednej ręki na drugą, wytrzymać 5 sek. [cite: 30, 31]",
+    "img": "https://via.placeholder.com/400x200?text=Naciskanie+dłoni"
+  },
+  {
+    "title": "Oddech [cite: 32]",
+    "reps": "3-4x [cite: 32]",
+    "desc": "Pw. leżenie tyłem, wdech nosem, wydech ustami. [cite: 32]",
+    "img": "https://via.placeholder.com/400x200?text=Oddech"
+  },
+  {
+    "title": "Zginanie kolan przodem [cite: 33]",
+    "reps": "Po 10x na każdą KKD [cite: 33]",
+    "desc": "Pw. leżenie przodem, ręce zgięte pod brodą, naprzemienne zginanie nóg w stawach kolanowych. [cite: 33]",
+    "img": "https://via.placeholder.com/400x200?text=Zginanie+kolan+przodem"
+  },
+  {
+    "title": "Wspięcie na palce w leżeniu [cite: 34]",
+    "reps": "Po 10x na każdą KKD [cite: 35]",
+    "desc": "Pw. leżenie przodem, ręce zgięte pod brodą, wspięcie jednej KKD na palce z jednoczesnym jej prostowaniem w stawie kolanowym. [cite: 34, 35]",
+    "img": "https://via.placeholder.com/400x200?text=Wspiecie+w+leżeniu"
+  },
+  {
+    "title": "Napinanie pośladków [cite: 36]",
+    "reps": "10x [cite: 36]",
+    "desc": "Pw. leżenie przodem, ręce zgięte pod brodą, napinanie mięśni pośladków, wytrzymać przez 3 sek. [cite: 36]",
+    "img": "https://via.placeholder.com/400x200?text=Napinanie+pośladków"
+  },
+  {
+    "title": "Ściąganie łopatek [cite: 37, 38]",
+    "reps": "10x [cite: 38]",
+    "desc": "Pw. leżenie przodem, głowa oparta brodą, ręce zgięte pod kątem $90^{0}$[cite: 37]. Oderwanie KKG od materaca z jednoczesnym ściąganiem łopatek[cite: 38].",
+    "img": "https://via.placeholder.com/400x200?text=Ściąganie+łopatek"
+  },
+  {
+    "title": "Unoszenie naprzemienne KKG i KKD [cite: 39, 40]",
+    "reps": "Po 10x na każdą stronę [cite: 40]",
+    "desc": "Pw. leżenie przodem, KKG wyprostowane przed sobą. Unoszenie lewej KKG i prawej KKD o $10^{0}$, następnie zmiana. [cite: 39, 40]",
+    "img": "https://via.placeholder.com/400x200?text=Unoszenie+naprzemienne"
+  },
+  {
+    "title": "Wspinanie na palce i pięty [cite: 41]",
+    "reps": "10x [cite: 41]",
+    "desc": "Pw. stojąca. Wspinanie się na palce i pięty. [cite: 41]",
+    "img": "https://via.placeholder.com/400x200?text=Palce-pięty"
+  },
+  {
+    "title": "Zginanie bioder i kolan stojąc [cite: 42]",
+    "reps": "Po 10x na każdą nogę [cite: 43]",
+    "desc": "Pw. stojąca. Naprzemienne zginanie KKD w stawach biodrowych i kolanowych do $90^{0}$ z wspięciem na palce. [cite: 42, 43]",
+    "img": "https://via.placeholder.com/400x200?text=Zginanie+stojąc"
+  },
+  {
+    "title": "Przysiady [cite: 44]",
+    "reps": "10x [cite: 44]",
+    "desc": "Wykonywanie przysiadów. [cite: 44]",
+    "img": "https://via.placeholder.com/400x200?text=Przysiady"
+  },
+  {
+    "title": "Oddech w pozycji stojącej [cite: 45]",
+    "reps": "3-4x [cite: 45]",
+    "desc": "Pw. stojąca. Ręce do góry (wdech), powrót do pozycji wyjściowej (wydech). [cite: 45]",
+    "img": "https://via.placeholder.com/400x200?text=Oddech+stojąc"
+  },
+  {
+    "title": "Prawidłowa postawa [cite: 46]",
+    "reps": "Nawyk ciągły [cite: 48]",
+    "desc": "Chodź z uniesioną głową[cite: 46]. Napinaj pośladki, wciągaj brzuch i ściągaj łopatki[cite: 48]. Nogi w kolanach nie mogą być ugięte[cite: 49].",
+    "img": "https://via.placeholder.com/400x200?text=Prawidłowa+postawa"
+  },
+  {
+    "title": "Praca przy biurku [cite: 50]",
+    "reps": "Co godzinę [cite: 50]",
+    "desc": "Nie siedź długo. Rób przerwę na gimnastykę i wstawaj co jakiś czas[cite: 50, 51].",
+    "img": "https://via.placeholder.com/400x200?text=Przerwa+w+pracy"
+  },
+  {
+    "title": "Sposób siedzenia [cite: 52]",
+    "reps": "N/A",
+    "desc": "Podpieraj odcinek lędźwiowy. Stawy biodrowe, kolanowe i skokowe powinny być zgięte pod kątem ok. $90$ stopni[cite: 52, 53].",
+    "img": "https://via.placeholder.com/400x200?text=Prawidłowe+siedzenie"
+  },
+  {
+    "title": "Wstawanie z krzesła [cite: 54]",
+    "reps": "N/A",
+    "desc": "Przysuń się do krawędzi, podnieś się przez prostowanie nóg bez pochylania tułowia w przód[cite: 54].",
+    "img": "https://via.placeholder.com/400x200?text=Wstawanie+z+krzesła"
+  },
+  {
+    "title": "Podnoszenie przedmiotów [cite: 55]",
+    "reps": "N/A",
+    "desc": "Przykucnij, ugnij kolana, zachowaj prosty kręgosłup i podnoś przedmiot prostując biodra i kolana[cite: 55, 56].",
+    "img": "https://via.placeholder.com/400x200?text=Podnoszenie+przedmiotów"
+  },
+  {
+    "title": "Prace w pochyleniu [cite: 58, 59]",
+    "reps": "Co jakiś czas [cite: 59]",
+    "desc": "Podczas prac jak odkurzanie czy praca w ogrodzie, co jakiś czas wyprostuj się i przeciągnij[cite: 58, 59].",
+    "img": "https://via.placeholder.com/400x200?text=Przeciąganie+się"
+  },
+  {
+    "title": "Miejsce do spania [cite: 59, 60]",
+    "reps": "Codziennie [cite: 59]",
+    "desc": "Materac płaski, sztywny, nie zapadający się. Rezygnacja z dużej, miękkiej poduszki[cite: 60].",
+    "img": "https://via.placeholder.com/400x200?text=Materac"
+  },
+  {
+    "title": "Wstawanie z łóżka [cite: 61, 77]",
+    "reps": "Codziennie [cite: 61]",
+    "desc": "Przekręć się na bok [cite: 78], opuść nogi poza łóżko [cite: 79], podnieś się przy użyciu ręki[cite: 80]. Unikaj gwałtownego pochylania[cite: 63].",
+    "img": "https://via.placeholder.com/400x200?text=Wstawanie+z+łóżka"
+  },
+  {
+    "title": "Odpoczynek przy zmęczeniu [cite: 64]",
+    "reps": "N/A",
+    "desc": "Zamiast fotela połóż się na brzuchu, podpierając się na przedramionach[cite: 64].",
+    "img": "https://via.placeholder.com/400x200?text=Odpoczynek+na+brzuchu"
+  },
+  {
+    "title": "Leżenie na plecach [cite: 65]",
+    "reps": "N/A",
+    "desc": "Połóż zwinięty koc pod kolana, a pod głowę małą poduszkę[cite: 65].",
+    "img": "https://via.placeholder.com/400x200?text=Leżenie+z+kocem"
+  },
+  {
+    "title": "Odciążanie w staniu [cite: 67, 68]",
+    "reps": "N/A",
+    "desc": "Podczas dłuższego stania połóż jedną nogę na niskim stołeczku[cite: 68].",
+    "img": "https://via.placeholder.com/400x200?text=Noga+na+stołku"
+  },
+  {
+    "title": "Aktywność fizyczna [cite: 69, 70]",
+    "reps": "N/A",
+    "desc": "Zalecane: pływanie grzbietowe, jazda na rowerze, narciarstwo biegowe[cite: 69]. Możliwe swobodne zwisy na drążku do 10 sek. po wygojeniu rany[cite: 70].",
+    "img": "https://via.placeholder.com/400x200?text=Pływanie+grzbietowe"
+  },
+  {
+    "title": "Kichanie i kaszel [cite: 71]",
+    "reps": "N/A",
+    "desc": "Należy odchylić głowę do tyłu[cite: 71].",
+    "img": "https://via.placeholder.com/400x200?text=Kichanie"
+  },
+  {
+    "title": "Jazda samochodem [cite: 72]",
+    "reps": "N/A",
+    "desc": "Plecy pionowo, głowa na zagłówku[cite: 73]. Można włożyć poduszkę pod lędźwie[cite: 73]. Zachowaj lordozę lędźwiową[cite: 74].",
+    "img": "https://via.placeholder.com/400x200?text=Jazda+samochodem"
+  },
+  {
+    "title": "Noszenie ciężarów [cite: 75]",
+    "reps": "N/A",
+    "desc": "Równomiernie rozkładaj obciążenie (np. zakupy)[cite: 75].",
+    "img": "https://via.placeholder.com/400x200?text=Równomierne+obciążenie"
+  },
+  {
+    "title": "Nagły, silny ból [cite: 76]",
+    "reps": "N/A",
+    "desc": "Przyjmij pozycję tzw. przewróconego krzesła[cite: 76].",
+    "img": "https://via.placeholder.com/400x200?text=Pozycja+bólowa"
+  }
+]
     ];
 
     let currentIndex = 0;
