@@ -382,17 +382,6 @@
 
         <div class="card">
             <div class="card-header">
-                <h2><span class="card-icon">❤️</span> Pulsometr (Tap)</h2>
-            </div>
-            <div id="tap-area" onclick="handleTap()">
-                Klikaj zgodnie z twoim tętnem na szyi
-            </div>
-            <div class="result-value" id="bpm-display" style="text-align:center; margin-bottom:10px;">-- BPM</div>
-            <button class="outline" onclick="resetPulse()">Reset</button>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
                 <h2><span class="card-icon">💧</span> Woda</h2>
             </div>
             <div class="form-group">
@@ -406,6 +395,18 @@
             <button onclick="calcWater()">Oblicz</button>
             <div id="res-water" class="result-box"></div>
         </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2><span class="card-icon">❤️</span> Pulsometr (Tap)</h2>
+            </div>
+            <div id="tap-area" onclick="handleTap()">
+                Klikaj zgodnie z twoim tętnem na szyi
+            </div>
+            <div class="result-value" id="bpm-display" style="text-align:center; margin-bottom:10px;">-- BPM</div>
+            <button class="outline" onclick="resetPulse()">Reset</button>
+        </div>
+
 
         <div class="card" style="grid-column: 1 / -1;">
             <div class="card-header">
@@ -446,12 +447,12 @@
 
     <div class="action-section">
         <a href="https://psychodem-lab.github.io/zdrowie/trening.html" class="cta-button">
-            Seria ćwiczeń na zdrowy kręgosłup →
+            Seria ćwiczeń na zdrowy kręgosłup
         </a>
     </div>
 
     <footer>
-        <p><strong>Nota prawna:</strong> Wszystkie obliczenia oparte są na powszechnie uznanych wzorach medycznych. Aplikacja nie zbiera danych (działa lokalnie). Wyniki mają charakter poglądowy i nie zastępują diagnozy lekarskiej.</p>
+        <p><strong>Nota:</strong> Wszystkie obliczenia oparte są na powszechnie uznanych wzorach medycznych. Aplikacja nie zbiera danych (działa lokalnie). Wyniki mają charakter poglądowy i nie zastępują diagnozy lekarskiej.</p>
     </footer>
 </div>
 
