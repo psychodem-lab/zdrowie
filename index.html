@@ -6,22 +6,6 @@
     <link rel="shortcut icon" type="image/png" href="cbt.png" />
     <title>Szlachetne Zdrowie</title>
     <style>
-        .logo-wrapper {
-            text-align: center;
-            padding: 20px 0;
-        }
-        .logo-wrapper a {
-            text-decoration: none;
-            border: none;
-        }
-
-        .logo-wrapper img {
-            max-height: 100px; 
-            width: auto;
-            display: inline-block;
-            margin-top: 0; 
-            border: 0;
-        }
         :root {
             /* Paleta kolorów - Clinical Clean */
             --primary: #0081a7; 
@@ -55,6 +39,17 @@
         .container {
             max-width: 1100px;
             margin: 0 auto;
+        }
+
+        /* Logo */
+        .logo-wrapper {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .logo-wrapper img {
+            max-height: 100px; 
+            width: auto;
+            border: 0;
         }
 
         /* Header */
@@ -168,7 +163,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
-            margin-top: auto; /* Push to bottom if flex container */
+            margin-top: auto;
         }
 
         button:hover {
@@ -215,17 +210,6 @@
             margin-top: 5px;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #fff;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-
         /* Specyficzne dla Pulsometru */
         #tap-area {
             height: 100px;
@@ -240,6 +224,8 @@
             background: #f8fafc;
             color: var(--text-muted);
             transition: all 0.1s;
+            text-align: center;
+            padding: 10px;
         }
         #tap-area:active {
             background: #e2e8f0;
@@ -255,6 +241,31 @@
             margin: 10px 0;
             color: var(--primary-dark);
         }
+
+        /* Sekcja końcowa z przyciskiem */
+        .action-section {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 36px;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 175, 185, 0.3);
+        }
         
         /* Footer */
         footer {
@@ -266,19 +277,19 @@
             padding-top: 30px;
         }
     </style>
-    <body>
-    <div class="logo-wrapper">
-            <a href="https://psychodem-lab.github.io/CBT/Biblioteka" title="Powrót do strony głównej">
-                <img src="logo.png" alt="Logo Psychodem">
-            </a>
-        </div>
 </head>
 <body>
 
 <div class="container">
+    <div class="logo-wrapper">
+        <a href="https://psychodem-lab.github.io/CBT/Biblioteka">
+            <img src="logo.png" alt="Logo Psychodem">
+        </a>
+    </div>
+
     <header>
         <h1>Szlachetne Zdrowie</h1>
-        <p>Precyzyjne algorytmy. Czyste dane. zero domysłów.</p>
+        <p>Precyzyjne algorytmy. Czyste dane. Zero domysłów.</p>
     </header>
 
     <div class="grid">
@@ -340,7 +351,7 @@
 
         <div class="card">
             <div class="card-header">
-                <h2><span class="card-icon">🔥</span> BMR (Mifflin-St Jeor)</h2>
+                <h2><span class="card-icon">🔥</span> BMR (Mifflin)</h2>
             </div>
             <div class="form-row">
                 <div class="form-group" style="flex:1">
@@ -389,7 +400,7 @@
                 <input type="number" id="water-weight">
             </div>
             <div class="form-group">
-                <label>Aktywność fizyczna (min)</label>
+                <label>Aktywność (min)</label>
                 <input type="number" id="water-active" value="0">
             </div>
             <button onclick="calcWater()">Oblicz</button>
@@ -400,9 +411,9 @@
             <div class="card-header">
                 <h2><span class="card-icon">🏃</span> Test Ruffiera (Wydolność serca)</h2>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
                 <div>
-                    <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:10px;">
+                    <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">
                         <strong>Procedura:</strong><br>
                         1. Zmierz tętno spoczynkowe (P1).<br>
                         2. Wykonaj 30 przysiadów w 60 sekund.<br>
@@ -431,9 +442,13 @@
             </div>
             <div id="res-ruffier" class="result-box"></div>
         </div>
-        <div>
- href="https://psychodem-lab.github.io/zdrowie/trening.html" class="button"> Seria ćwiczeń na zdrowy kręgosłup 
-        </div>
+    </div>
+
+    <div class="action-section">
+        <a href="https://psychodem-lab.github.io/zdrowie/trening.html" class="cta-button">
+            Seria ćwiczeń na zdrowy kręgosłup →
+        </a>
+    </div>
 
     <footer>
         <p><strong>Nota prawna:</strong> Wszystkie obliczenia oparte są na powszechnie uznanych wzorach medycznych. Aplikacja nie zbiera danych (działa lokalnie). Wyniki mają charakter poglądowy i nie zastępują diagnozy lekarskiej.</p>
@@ -454,150 +469,102 @@
         return isNaN(v) ? 0 : v;
     }
 
-    /* --- 1. BMI --- */
+    /* --- LOGIKA KALKULATORÓW --- */
     function calcBMI() {
         const w = getVal('bmi-weight');
-        const h = getVal('bmi-height') / 100; // cm to m
+        const h = getVal('bmi-height') / 100;
         if (w <= 0 || h <= 0) return alert("Podaj poprawne dane");
-
         const bmi = (w / (h * h)).toFixed(2);
         let desc = "", col = "";
-
         if (bmi < 18.5) { desc = "Niedowaga"; col = "var(--primary)"; }
         else if (bmi < 25) { desc = "Norma"; col = "var(--success)"; }
         else if (bmi < 30) { desc = "Nadwaga"; col = "var(--warning)"; }
         else { desc = "Otyłość"; col = "var(--danger)"; }
-
         showResult('res-bmi', bmi, `Kategoria: ${desc}`, col);
     }
 
-    /* --- 2. WHR --- */
     function calcWHR() {
         const waist = getVal('whr-waist');
         const hip = getVal('whr-hip');
         const gender = document.getElementById('whr-gender').value;
         if (waist <= 0 || hip <= 0) return alert("Podaj poprawne dane");
-
         const whr = (waist / hip).toFixed(2);
         let type = "Typ: Gruszka (Bezpieczny)";
-        let risk = false;
-
-        // Limity otyłości brzusznej wg WHO
-        if (gender === 'm' && whr >= 0.90) risk = true;
-        if (gender === 'k' && whr >= 0.85) risk = true;
-
+        let risk = (gender === 'm' && whr >= 0.9) || (gender === 'k' && whr >= 0.85);
         if (risk) type = "Typ: Jabłko (Ryzyko otyłości trzewnej)";
-        
         showResult('res-whr', whr, type, risk ? 'var(--danger)' : 'var(--success)');
     }
 
-    /* --- 3. WHtR --- */
     function calcWHtR() {
         const w = getVal('whtr-waist');
         const h = getVal('whtr-height');
-        if (w <= 0 || h <= 0) return alert("Podaj poprawne dane");
-
+        if (w <= 0 || h <= 0) return alert("Podaj dane");
         const whtr = (w / h).toFixed(2);
         let desc = "", col = "";
-
         if (whtr <= 0.5) { desc = "Zdrowy poziom"; col = "var(--success)"; }
         else if (whtr <= 0.6) { desc = "Podwyższone ryzyko"; col = "var(--warning)"; }
         else { desc = "Wysokie ryzyko metaboliczne"; col = "var(--danger)"; }
-
         showResult('res-whtr', whtr, `Interpretacja: ${desc}`, col);
     }
 
-    /* --- 4. BMR (Mifflin-St Jeor) --- */
     function calcBMR() {
-        const w = getVal('bmr-weight');
-        const h = getVal('bmr-height');
-        const age = getVal('bmr-age');
+        const w = getVal('bmr-weight'), h = getVal('bmr-height'), age = getVal('bmr-age');
         const gender = document.getElementById('bmr-gender').value;
-
-        if (w <= 0 || h <= 0 || age <= 0) return alert("Wypełnij wszystkie pola");
-
-        // Wzór Mifflina-St Jeora
+        if (w <= 0 || h <= 0 || age <= 0) return alert("Wypełnij pola");
         let bmr = (10 * w) + (6.25 * h) - (5 * age);
-        if (gender === 'm') bmr += 5;
-        else bmr -= 161;
-
-        showResult('res-bmr', `${Math.round(bmr)} kcal`, "Podstawowa przemiana materii (spoczynek)", "var(--primary-dark)");
+        bmr = (gender === 'm') ? bmr + 5 : bmr - 161;
+        showResult('res-bmr', `${Math.round(bmr)} kcal`, "Podstawowa przemiana materii", "var(--primary-dark)");
     }
 
-    /* --- 5. WODA --- */
     function calcWater() {
-        const w = getVal('water-weight');
-        const act = getVal('water-active');
+        const w = getVal('water-weight'), act = getVal('water-active');
         if (w <= 0) return alert("Podaj wagę");
-
-        let needs = w * 30; // baza
-        if (act > 0) needs += (act / 30) * 350; // dodatek treningowy
-
+        let needs = w * 30 + (act / 30) * 350;
         showResult('res-water', `${Math.round(needs)} ml`, "Dzienne zapotrzebowanie płynów", "#3498db");
     }
 
-    /* --- 6. PULS (TAP) --- */
     let taps = [];
     function handleTap() {
         const now = Date.now();
-        if (taps.length > 0 && now - taps[taps.length - 1] > 2000) taps = []; // Reset po 2s przerwy
+        if (taps.length > 0 && now - taps[taps.length - 1] > 2000) taps = [];
         taps.push(now);
-        if (taps.length > 10) taps.shift(); // Keep last 10
-
+        if (taps.length > 10) taps.shift();
         if (taps.length > 1) {
             let intervals = [];
             for (let i = 1; i < taps.length; i++) intervals.push(taps[i] - taps[i-1]);
-            const avg = intervals.reduce((a, b) => a + b) / intervals.length;
-            const bpm = Math.round(60000 / avg);
+            const bpm = Math.round(60000 / (intervals.reduce((a, b) => a + b) / intervals.length));
             document.getElementById('bpm-display').innerText = bpm + " BPM";
         }
     }
-    function resetPulse() {
-        taps = [];
-        document.getElementById('bpm-display').innerText = "-- BPM";
-    }
+    function resetPulse() { taps = []; document.getElementById('bpm-display').innerText = "-- BPM"; }
 
-    /* --- 7. RUFFIER --- */
     let timerInterval;
     function startRuffierTimer(mode) {
         clearInterval(timerInterval);
-        let seconds = (mode === 'exercise') ? 60 : 60;
+        let seconds = 60;
         const display = document.getElementById('ruffier-timer');
-        
-        display.innerText = `00:${seconds}`;
-        display.style.color = 'var(--primary)';
-
+        display.innerText = "00:60";
         timerInterval = setInterval(() => {
             seconds--;
             display.innerText = `00:${seconds < 10 ? '0'+seconds : seconds}`;
-            
             if (seconds <= 0) {
                 clearInterval(timerInterval);
                 display.innerText = "KONIEC";
                 display.style.color = 'var(--danger)';
-                // Prosty beep (opcjonalny, może nie działać bez interakcji w niektórych przeglądarkach)
-                // const audio = new AudioContext(); // skipped to keep simple
             }
         }, 1000);
     }
 
     function calcRuffier() {
-        const p1 = getVal('p1');
-        const p2 = getVal('p2');
-        const p3 = getVal('p3');
-
-        if (p1 <= 0 || p2 <= 0 || p3 <= 0) return alert("Wprowadź wszystkie 3 pomiary tętna");
-
-        // Wzór Ruffiera
+        const p1 = getVal('p1'), p2 = getVal('p2'), p3 = getVal('p3');
+        if (p1 <= 0 || p2 <= 0 || p3 <= 0) return alert("Podaj 3 pomiary");
         const index = ((p1 + p2 + p3) - 200) / 10;
         let desc = "", col = "";
-
         if (index <= 0) { desc = "Wydolność: Wybitna"; col = "var(--success)"; }
         else if (index <= 5) { desc = "Wydolność: Bardzo dobra"; col = "#80b918"; }
         else if (index <= 10) { desc = "Wydolność: Przeciętna"; col = "var(--warning)"; }
         else if (index <= 15) { desc = "Wydolność: Słaba"; col = "#e76f51"; }
         else { desc = "Wydolność: Bardzo słaba"; col = "var(--danger)"; }
-
         showResult('res-ruffier', index.toFixed(1), desc, col);
     }
 </script>
