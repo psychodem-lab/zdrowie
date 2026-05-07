@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twój Trening Dnia</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --secondary: #3498db;
+            --bg: #f4f7f6;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #app-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .exercise-image {
+            width: 100%;
+            height: 200px;
+            background: #eee;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            color: #888;
+            object-fit: cover;
+        }
+
+        h2 { margin: 0.5rem 0; color: var(--secondary); }
+        .reps { font-size: 1.2rem; font-weight: bold; color: #e67e22; }
+        .desc { margin: 1rem 0; line-height: 1.5; color: #666; }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #27ae60;
+            transform: scale(1.02);
+        }
+
+        button:active { transform: scale(0.98); }
+
+        #finish-screen { display: none; }
+        #finish-screen h1 { color: var(--primary); }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div id="exercise-screen">
+        <div class="progress-bar">
+            <div id="progress-fill"></div>
+        </div>
+        <div id="exercise-content">
+            <p id="exercise-count">Ćwiczenie 1 z 25</p>
+            <img id="ex-img" class="exercise-image" src="https://via.placeholder.com/400x200?text=Podgląd+ćwiczenia" alt="Instrukcja">
+            <h2 id="ex-title">Pompki klasyczne</h2>
+            <p class="reps" id="ex-reps">Powtórzenia: 15</p>
+            <p class="desc" id="ex-desc">Podpór przodem, ręce na szerokości barków. Schodź klatką nisko nad ziemię.</p>
+            <button onclick="nextExercise()">ZROBIONE! ✓</button>
+        </div>
+    </div>
+
+    <div id="finish-screen">
+        <span style="font-size: 4rem;">🎉</span>
+        <h1>GRATULACJE!</h1>
+        <p>Właśnie zadbałeś o swoje zdrowie i formę.</p>
+        <p>Kawał dobrej roboty!</p>
+        <button onclick="location.reload()" style="background: var(--secondary); margin-top: 20px;">Zacznij od nowa</button>
+    </div>
+</div>
+
+<script>
+    // Tutaj możesz dodać wszystkie 25 ćwiczeń
+    const exercises = [
+        { title: "Pajacyki", reps: "30 sekund", desc: "Dynamiczne skoki z unoszeniem rąk.", img: "https://via.placeholder.com/400x200?text=Pajacyki" },
+        { title: "Przysiady", reps: "20 powtórzeń", desc: "Trzymaj plecy proste, pięty przyklejone do podłogi.", img: "https://via.placeholder.com/400x200?text=Przysiady" },
+        { title: "Pompki", reps: "12 powtórzeń", desc: "Schodź klatką nisko, trzymaj napięty brzuch.", img: "https://via.placeholder.com/400x200?text=Pompki" },
+        { title: "Plank (Deska)", reps: "45 sekund", desc: "Podpór na przedramionach. Ciało w linii prostej.", img: "https://via.placeholder.com/400x200?text=Plank" },
+        { title: "Wykroki", reps: "10 na nogę", desc: "Rób duży krok w przód, kolano nie dotyka ziemi.", img: "https://via.placeholder.com/400x200?text=Wykroki" },
+        // ... dopisz tutaj pozostałe 20 ćwiczeń w tym samym formacie
+    ];
+
+    let currentIndex = 0;
+
+    function updateUI() {
+        const ex = exercises[currentIndex];
+        const progress = ((currentIndex) / exercises.length) * 100;
+        
+        document.getElementById('progress-fill').style.width = progress + "%";
+        document.getElementById('exercise-count').innerText = `Ćwiczenie ${currentIndex + 1} z ${exercises.length}`;
+        document.getElementById('ex-title').innerText = ex.title;
+        document.getElementById('ex-reps').innerText = ex.reps;
+        document.getElementById('ex-desc').innerText = ex.desc;
+        document.getElementById('ex-img').src = ex.img;
+    }
+
+    function nextExercise() {
+        currentIndex++;
+        
+        if (currentIndex < exercises.length) {
+            updateUI();
+        } else {
+            showFinish();
+        }
+    }
+
+    function showFinish() {
+        document.getElementById('exercise-screen').classList.add('hidden');
+        document.getElementById('progress-fill').style.width = "100%";
+        const finishScreen = document.getElementById('finish-screen');
+        finishScreen.style.display = 'block';
+        
+        // Strzał z konfetti!
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+
+    // Inicjalizacja pierwszego ćwiczenia
+    updateUI();
+</script>
+
+</body>
+</html>
