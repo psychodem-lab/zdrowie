@@ -3,93 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twój Trening Dnia</title>
+    <title>Twój Plan Treningowy</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary: #2ecc71;
-            --secondary: #3498db;
-            --bg: #f4f7f6;
+            --primary: #27ae60;
+            --secondary: #2980b9;
+            --accent: #f39c12;
+            --bg: #f0f3f5;
+            --card-bg: #ffffff;
             --text: #2c3e50;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            padding: 15px;
         }
 
         #app-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 500px;
+            background: var(--card-bg);
             width: 100%;
+            max-width: 550px;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             text-align: center;
+        }
+
+        /* Pasek postępu */
+        .progress-container {
+            margin-bottom: 25px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #7f8c8d;
         }
 
         .progress-bar {
             width: 100%;
-            height: 10px;
-            background: #eee;
-            border-radius: 5px;
-            margin-bottom: 2rem;
+            height: 12px;
+            background: #ecf0f1;
+            border-radius: 10px;
             overflow: hidden;
         }
 
         #progress-fill {
             height: 100%;
-            background: var(--primary);
+            background: linear-gradient(90deg, var(--primary), #2ecc71);
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.4s ease;
         }
 
+        /* Zawartość ćwiczenia */
         .exercise-image {
             width: 100%;
-            height: 200px;
-            background: #eee;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            font-style: italic;
-            color: #888;
-            object-fit: cover;
+            height: 250px;
+            background: #f9f9f9;
+            border-radius: 15px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
         }
 
-        h2 { margin: 0.5rem 0; color: var(--secondary); }
-        .reps { font-size: 1.2rem; font-weight: bold; color: #e67e22; }
-        .desc { margin: 1rem 0; line-height: 1.5; color: #666; }
-        
+        h2 {
+            font-size: 1.6rem;
+            margin: 0 0 10px 0;
+            color: var(--secondary);
+        }
+
+        .reps-box {
+            display: inline-block;
+            background: #fef5e7;
+            color: var(--accent);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .instruction {
+            line-height: 1.6;
+            color: #5d6d7e;
+            margin-bottom: 30px;
+            min-height: 60px;
+        }
+
+        /* Przyciski */
         button {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            border-radius: 50px;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 15px;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
             width: 100%;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
         }
 
         button:hover {
-            background: #27ae60;
-            transform: scale(1.02);
+            background: #219150;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
         }
 
-        button:active { transform: scale(0.98); }
+        button:active {
+            transform: translateY(1px);
+        }
 
-        #finish-screen { display: none; }
-        #finish-screen h1 { color: var(--primary); }
+        /* Ekran końcowy */
+        #finish-screen {
+            display: none;
+            padding: 20px 0;
+        }
+
+        #finish-screen h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
 
         .hidden { display: none; }
     </style>
@@ -98,320 +145,131 @@
 
 <div id="app-container">
     <div id="exercise-screen">
-        <div class="progress-bar">
-            <div id="progress-fill"></div>
+        <div class="progress-container">
+            <div class="progress-info">
+                <span>Postęp</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
         </div>
-        <div id="exercise-content">
-            <p id="exercise-count">Ćwiczenie 1 z 25</p>
-            <img id="ex-img" class="exercise-image" src="https://via.placeholder.com/400x200?text=Podgląd+ćwiczenia" alt="Instrukcja">
-            <h2 id="ex-title">Pompki klasyczne</h2>
-            <p class="reps" id="ex-reps">Powtórzenia: 15</p>
-            <p class="desc" id="ex-desc">Podpór przodem, ręce na szerokości barków. Schodź klatką nisko nad ziemię.</p>
-            <button onclick="nextExercise()">ZROBIONE! ✓</button>
+
+        <div id="content">
+            <img id="ex-img" class="exercise-image" src="" alt="Ilustracja ćwiczenia">
+            <h2 id="ex-title">Ładowanie...</h2>
+            <div class="reps-box" id="ex-reps">-</div>
+            <p class="instruction" id="ex-desc">-</p>
+            <button onclick="handleNext()">ZROBIONE! ✓</button>
+            <p style="color: #bdc3c7; font-size: 0.8rem; margin-top: 15px;" id="ex-counter">Ćwiczenie 1 z 25</p>
         </div>
     </div>
 
     <div id="finish-screen">
-        <span style="font-size: 4rem;">🎉</span>
+        <div style="font-size: 5rem; margin-bottom: 20px;">🎉</div>
         <h1>GRATULACJE!</h1>
-        <p>Właśnie zadbałeś o swoje zdrowie i formę.</p>
-        <p>Kawał dobrej roboty!</p>
-        <button onclick="location.reload()" style="background: var(--secondary); margin-top: 20px;">Zacznij od nowa</button>
+        <p style="font-size: 1.2rem; color: #7f8c8d;">Właśnie zadbałeś o swoje zdrowie!</p>
+        <p>Twoje ciało Ci za to podziękuje.</p>
+        <button onclick="location.reload()" style="background: var(--secondary); margin-top: 30px;">Zacznij od nowa</button>
     </div>
 </div>
 
 <script>
-    // Tutaj możesz dodać wszystkie 25 ćwiczeń
     const exercises = [
-[
-  {
-    "title": "Kółeczka stopami [cite: 8]",
-    "reps": "10x na zewnątrz i 10x do wewnątrz [cite: 8]",
-    "desc": "Pw. leżenie tyłem, kółeczka stopami. [cite: 8]",
-    "img": "https://github.com/psychodem-lab/zdrowie/blob/ef810c60bd8c6c38b785faa4c74156c1e2a97734/cwiczenia.jpg"
-  },
-  {
-    "title": "Zginanie stóp [cite: 9]",
-    "reps": "10x [cite: 9]",
-    "desc": "Pw. leżenie tyłem, zginanie grzbietowe i podeszwowe stóp. [cite: 9]",
-    "img": "https://via.placeholder.com/400x200?text=Zginanie+stóp"
-  },
-  {
-    "title": "Skręcanie stóp [cite: 10]",
-    "reps": "10-15x [cite: 11]",
-    "desc": "Pw. leżenie tyłem, nogi rozszerzone 50-60 cm, skręcanie stóp do środka i na zewnątrz. [cite: 10, 11]",
-    "img": "https://via.placeholder.com/400x200?text=Skręcanie+stóp"
-  },
-  {
-    "title": "Naprzemienne zginanie nóg [cite: 12]",
-    "reps": "10x [cite: 12]",
-    "desc": "Pw. leżenie tyłem, naprzemienne zginanie kończyn dolnych w stawach biodrowych i kolanowych, suwając piętą po materacu. [cite: 12]",
-    "img": "https://via.placeholder.com/400x200?text=Naprzemienne+zginanie+nóg"
-  },
-  {
-    "title": "Ćwiczenie oddechowe z KKG [cite: 13]",
-    "reps": "3-4x [cite: 14]",
-    "desc": "Pw. leżenie tyłem, KKG splecione na brzuchu, przenosimy ręce za głowę z jednoczesnym wdechem nosem, powrót do pozycji wyjściowej wydech ustami. [cite: 13, 14]",
-    "img": "https://via.placeholder.com/400x200?text=Oddech+z+rekami"
-  },
-  {
-    "title": "Odwodzenie nóg [cite: 15]",
-    "reps": "Po 10x na każdą KKD [cite: 15]",
-    "desc": "Pw. leżenie tyłem, odwodzenie i przywodzenie naprzemienne nóg w bok. [cite: 15]",
-    "img": "https://via.placeholder.com/400x200?text=Odwodzenie+nóg"
-  },
-  {
-    "title": "Rozrywanie rąk [cite: 16]",
-    "reps": "10x [cite: 16]",
-    "desc": "Pw. leżenie tyłe, ręce „haczyki” przed klatką piersiową, rozrywanie rąk (wytrzymać 5 sekund). [cite: 16]",
-    "img": "https://via.placeholder.com/400x200?text=Rozrywanie+rąk"
-  },
-  {
-    "title": "Rozchylanie kolan [cite: 17, 18]",
-    "reps": "10-15x [cite: 18]",
-    "desc": "Pw. leżenie tyłem, KKD zgięte w stawach biodrowych i kolanowych, stopy oparte o materac, ręce splecione na karku. Rozchylanie kolan na zewnątrz do granicy bólu, a następnie łączenie kolan. [cite: 17, 18]",
-    "img": "https://via.placeholder.com/400x200?text=Rozchylanie+kolan"
-  },
-  {
-    "title": "Unoszenie głowy [cite: 19, 20]",
-    "reps": "10x [cite: 20]",
-    "desc": "Pw. leżenie tyłem, KKD zgięte, stopy oparte o materac, ręce wzdłuż tułowia. Unoszenie głowy z jednoczesnym dotknięciem brodą do klatki piersiowej, wytrzymać 3 sek. [cite: 19, 20]",
-    "img": "https://via.placeholder.com/400x200?text=Unoszenie+głowy"
-  },
-  {
-    "title": "Unoszenie bioder [cite: 21, 22]",
-    "reps": "10x [cite: 22]",
-    "desc": "Pw. leżenie tyłem, KKD zgięte, stopy oparte o materac, ręce wzdłuż tułowia. Unoszenie bioder z oderwaniem pośladków od podłoża, wytrzymać 3 sek. [cite: 21, 22]",
-    "img": "https://via.placeholder.com/400x200?text=Unoszenie+bioder"
-  },
-  {
-    "title": "Dotykanie kolanami podłoża [cite: 23, 24]",
-    "reps": "Brak danych [cite: 24]",
-    "desc": "Pw. leżenie tyłem, nogi odwiedzione, zgięte w stawach biodrowych i kolanowych. Naprzemienne dotykanie kolanami podłoża między nogami. [cite: 23, 24]",
-    "img": "https://via.placeholder.com/400x200?text=Dotykanie+kolanami"
-  },
-  {
-    "title": "Wciskanie łokci [cite: 25]",
-    "reps": "3-4x [cite: 26]",
-    "desc": "Pw. leżenie tyłem, ręce splecione na karku. Rozchylanie KKG z jednoczesnym wciskaniem ich do materaca (wdech), łączenie łokci (wydech). [cite: 25]",
-    "img": "https://via.placeholder.com/400x200?text=Wciskanie+łokci"
-  },
-  {
-    "title": "Prostowanie kolan do materaca [cite: 27]",
-    "reps": "10x [cite: 28]",
-    "desc": "Pw. leżenie tyłem, mocne prostowanie kolan z próbą wciśnięcia ich do materaca, przytrzymać 5 sekund. [cite: 27, 28]",
-    "img": "https://via.placeholder.com/400x200?text=Prostowanie+kolan"
-  },
-  {
-    "title": "Prostowanie kolan na wałku [cite: 29]",
-    "reps": "10x [cite: 30]",
-    "desc": "Pw. leżenie tyłem, duży wałek pod kolanami, prostowanie KKD w stawach kolanowych, wytrzymać 5 sekund. [cite: 29, 30]",
-    "img": "https://via.placeholder.com/400x200?text=Prostowanie+na+wałku"
-  },
-  {
-    "title": "Naciskanie dłoni [cite: 30, 31]",
-    "reps": "5-10x [cite: 31]",
-    "desc": "Pw. leżenie tyłem, nogi wyprostowane, ręce złożone jak do modlitwy, łokcie na zewnątrz. Jednoczesne naciskanie jednej ręki na drugą, wytrzymać 5 sek. [cite: 30, 31]",
-    "img": "https://via.placeholder.com/400x200?text=Naciskanie+dłoni"
-  },
-  {
-    "title": "Oddech [cite: 32]",
-    "reps": "3-4x [cite: 32]",
-    "desc": "Pw. leżenie tyłem, wdech nosem, wydech ustami. [cite: 32]",
-    "img": "https://via.placeholder.com/400x200?text=Oddech"
-  },
-  {
-    "title": "Zginanie kolan przodem [cite: 33]",
-    "reps": "Po 10x na każdą KKD [cite: 33]",
-    "desc": "Pw. leżenie przodem, ręce zgięte pod brodą, naprzemienne zginanie nóg w stawach kolanowych. [cite: 33]",
-    "img": "https://via.placeholder.com/400x200?text=Zginanie+kolan+przodem"
-  },
-  {
-    "title": "Wspięcie na palce w leżeniu [cite: 34]",
-    "reps": "Po 10x na każdą KKD [cite: 35]",
-    "desc": "Pw. leżenie przodem, ręce zgięte pod brodą, wspięcie jednej KKD na palce z jednoczesnym jej prostowaniem w stawie kolanowym. [cite: 34, 35]",
-    "img": "https://via.placeholder.com/400x200?text=Wspiecie+w+leżeniu"
-  },
-  {
-    "title": "Napinanie pośladków [cite: 36]",
-    "reps": "10x [cite: 36]",
-    "desc": "Pw. leżenie przodem, ręce zgięte pod brodą, napinanie mięśni pośladków, wytrzymać przez 3 sek. [cite: 36]",
-    "img": "https://via.placeholder.com/400x200?text=Napinanie+pośladków"
-  },
-  {
-    "title": "Ściąganie łopatek [cite: 37, 38]",
-    "reps": "10x [cite: 38]",
-    "desc": "Pw. leżenie przodem, głowa oparta brodą, ręce zgięte pod kątem $90^{0}$[cite: 37]. Oderwanie KKG od materaca z jednoczesnym ściąganiem łopatek[cite: 38].",
-    "img": "https://via.placeholder.com/400x200?text=Ściąganie+łopatek"
-  },
-  {
-    "title": "Unoszenie naprzemienne KKG i KKD [cite: 39, 40]",
-    "reps": "Po 10x na każdą stronę [cite: 40]",
-    "desc": "Pw. leżenie przodem, KKG wyprostowane przed sobą. Unoszenie lewej KKG i prawej KKD o $10^{0}$, następnie zmiana. [cite: 39, 40]",
-    "img": "https://via.placeholder.com/400x200?text=Unoszenie+naprzemienne"
-  },
-  {
-    "title": "Wspinanie na palce i pięty [cite: 41]",
-    "reps": "10x [cite: 41]",
-    "desc": "Pw. stojąca. Wspinanie się na palce i pięty. [cite: 41]",
-    "img": "https://via.placeholder.com/400x200?text=Palce-pięty"
-  },
-  {
-    "title": "Zginanie bioder i kolan stojąc [cite: 42]",
-    "reps": "Po 10x na każdą nogę [cite: 43]",
-    "desc": "Pw. stojąca. Naprzemienne zginanie KKD w stawach biodrowych i kolanowych do $90^{0}$ z wspięciem na palce. [cite: 42, 43]",
-    "img": "https://via.placeholder.com/400x200?text=Zginanie+stojąc"
-  },
-  {
-    "title": "Przysiady [cite: 44]",
-    "reps": "10x [cite: 44]",
-    "desc": "Wykonywanie przysiadów. [cite: 44]",
-    "img": "https://via.placeholder.com/400x200?text=Przysiady"
-  },
-  {
-    "title": "Oddech w pozycji stojącej [cite: 45]",
-    "reps": "3-4x [cite: 45]",
-    "desc": "Pw. stojąca. Ręce do góry (wdech), powrót do pozycji wyjściowej (wydech). [cite: 45]",
-    "img": "https://via.placeholder.com/400x200?text=Oddech+stojąc"
-  },
-  {
-    "title": "Prawidłowa postawa [cite: 46]",
-    "reps": "Nawyk ciągły [cite: 48]",
-    "desc": "Chodź z uniesioną głową[cite: 46]. Napinaj pośladki, wciągaj brzuch i ściągaj łopatki[cite: 48]. Nogi w kolanach nie mogą być ugięte[cite: 49].",
-    "img": "https://via.placeholder.com/400x200?text=Prawidłowa+postawa"
-  },
-  {
-    "title": "Praca przy biurku [cite: 50]",
-    "reps": "Co godzinę [cite: 50]",
-    "desc": "Nie siedź długo. Rób przerwę na gimnastykę i wstawaj co jakiś czas[cite: 50, 51].",
-    "img": "https://via.placeholder.com/400x200?text=Przerwa+w+pracy"
-  },
-  {
-    "title": "Sposób siedzenia [cite: 52]",
-    "reps": "N/A",
-    "desc": "Podpieraj odcinek lędźwiowy. Stawy biodrowe, kolanowe i skokowe powinny być zgięte pod kątem ok. $90$ stopni[cite: 52, 53].",
-    "img": "https://via.placeholder.com/400x200?text=Prawidłowe+siedzenie"
-  },
-  {
-    "title": "Wstawanie z krzesła [cite: 54]",
-    "reps": "N/A",
-    "desc": "Przysuń się do krawędzi, podnieś się przez prostowanie nóg bez pochylania tułowia w przód[cite: 54].",
-    "img": "https://via.placeholder.com/400x200?text=Wstawanie+z+krzesła"
-  },
-  {
-    "title": "Podnoszenie przedmiotów [cite: 55]",
-    "reps": "N/A",
-    "desc": "Przykucnij, ugnij kolana, zachowaj prosty kręgosłup i podnoś przedmiot prostując biodra i kolana[cite: 55, 56].",
-    "img": "https://via.placeholder.com/400x200?text=Podnoszenie+przedmiotów"
-  },
-  {
-    "title": "Prace w pochyleniu [cite: 58, 59]",
-    "reps": "Co jakiś czas [cite: 59]",
-    "desc": "Podczas prac jak odkurzanie czy praca w ogrodzie, co jakiś czas wyprostuj się i przeciągnij[cite: 58, 59].",
-    "img": "https://via.placeholder.com/400x200?text=Przeciąganie+się"
-  },
-  {
-    "title": "Miejsce do spania [cite: 59, 60]",
-    "reps": "Codziennie [cite: 59]",
-    "desc": "Materac płaski, sztywny, nie zapadający się. Rezygnacja z dużej, miękkiej poduszki[cite: 60].",
-    "img": "https://via.placeholder.com/400x200?text=Materac"
-  },
-  {
-    "title": "Wstawanie z łóżka [cite: 61, 77]",
-    "reps": "Codziennie [cite: 61]",
-    "desc": "Przekręć się na bok [cite: 78], opuść nogi poza łóżko [cite: 79], podnieś się przy użyciu ręki[cite: 80]. Unikaj gwałtownego pochylania[cite: 63].",
-    "img": "https://via.placeholder.com/400x200?text=Wstawanie+z+łóżka"
-  },
-  {
-    "title": "Odpoczynek przy zmęczeniu [cite: 64]",
-    "reps": "N/A",
-    "desc": "Zamiast fotela połóż się na brzuchu, podpierając się na przedramionach[cite: 64].",
-    "img": "https://via.placeholder.com/400x200?text=Odpoczynek+na+brzuchu"
-  },
-  {
-    "title": "Leżenie na plecach [cite: 65]",
-    "reps": "N/A",
-    "desc": "Połóż zwinięty koc pod kolana, a pod głowę małą poduszkę[cite: 65].",
-    "img": "https://via.placeholder.com/400x200?text=Leżenie+z+kocem"
-  },
-  {
-    "title": "Odciążanie w staniu [cite: 67, 68]",
-    "reps": "N/A",
-    "desc": "Podczas dłuższego stania połóż jedną nogę na niskim stołeczku[cite: 68].",
-    "img": "https://via.placeholder.com/400x200?text=Noga+na+stołku"
-  },
-  {
-    "title": "Aktywność fizyczna [cite: 69, 70]",
-    "reps": "N/A",
-    "desc": "Zalecane: pływanie grzbietowe, jazda na rowerze, narciarstwo biegowe[cite: 69]. Możliwe swobodne zwisy na drążku do 10 sek. po wygojeniu rany[cite: 70].",
-    "img": "https://via.placeholder.com/400x200?text=Pływanie+grzbietowe"
-  },
-  {
-    "title": "Kichanie i kaszel [cite: 71]",
-    "reps": "N/A",
-    "desc": "Należy odchylić głowę do tyłu[cite: 71].",
-    "img": "https://via.placeholder.com/400x200?text=Kichanie"
-  },
-  {
-    "title": "Jazda samochodem [cite: 72]",
-    "reps": "N/A",
-    "desc": "Plecy pionowo, głowa na zagłówku[cite: 73]. Można włożyć poduszkę pod lędźwie[cite: 73]. Zachowaj lordozę lędźwiową[cite: 74].",
-    "img": "https://via.placeholder.com/400x200?text=Jazda+samochodem"
-  },
-  {
-    "title": "Noszenie ciężarów [cite: 75]",
-    "reps": "N/A",
-    "desc": "Równomiernie rozkładaj obciążenie (np. zakupy)[cite: 75].",
-    "img": "https://via.placeholder.com/400x200?text=Równomierne+obciążenie"
-  },
-  {
-    "title": "Nagły, silny ból [cite: 76]",
-    "reps": "N/A",
-    "desc": "Przyjmij pozycję tzw. przewróconego krzesła[cite: 76].",
-    "img": "https://via.placeholder.com/400x200?text=Pozycja+bólowa"
-  }
-]
+        { "title": "Kółeczka stopami", "reps": "10x na zewnątrz i 10x do wewnątrz", "desc": "Pw. leżenie tyłem, kółeczka stopami.", "img": "https://via.placeholder.com/400x250?text=Kółeczka+stopami" },
+        { "title": "Zginanie stóp", "reps": "10x", "desc": "Pw. leżenie tyłem, zginanie grzbietowe i podeszwowe stóp.", "img": "https://via.placeholder.com/400x250?text=Zginanie+stóp" },
+        { "title": "Skręcanie stóp", "reps": "10-15x", "desc": "Pw. leżenie tyłem, nogi rozszerzone 50-60 cm, skręcanie stóp do środka i na zewnątrz.", "img": "https://via.placeholder.com/400x250?text=Skręcanie+stóp" },
+        { "title": "Naprzemienne zginanie nóg", "reps": "10x", "desc": "Pw. leżenie tyłem, naprzemienne zginanie kończyn dolnych w stawach biodrowych i kolanowych, suwając piętą po materacu.", "img": "https://via.placeholder.com/400x250?text=Naprzemienne+zginanie+nóg" },
+        { "title": "Ćwiczenie oddechowe", "reps": "3-4x", "desc": "Pw. leżenie tyłem, ręce splecione na brzuchu, przenosimy ręce za głowę z jednoczesnym wdechem nosem, powrót do pozycji wyjściowej - wydech ustami.", "img": "https://via.placeholder.com/400x250?text=Ćwiczenie+oddechowe" },
+        { "title": "Odwodzenie nóg", "reps": "Po 10x na każdą nogę", "desc": "Pw. leżenie tyłem, odwodzenie i przywodzenie naprzemienne nóg w bok.", "img": "https://via.placeholder.com/400x250?text=Odwodzenie+nóg" },
+        { "title": "Rozrywanie rąk", "reps": "10x", "desc": "Pw. leżenie tyłem, ręce „haczyki” splecione przed klatką piersiową, próba rozrywania rąk (wytrzymać 5 sekund).", "img": "https://via.placeholder.com/400x250?text=Rozrywanie+rąk" },
+        { "title": "Rozchylanie kolan", "reps": "10-15x", "desc": "Pw. leżenie tyłem, nogi zgięte, stopy oparte o podłoże, ręce na karku. Rozchylanie kolan na zewnątrz do granicy bólu, a następnie łączenie.", "img": "https://via.placeholder.com/400x250?text=Rozchylanie+kolan" },
+        { "title": "Unoszenie głowy", "reps": "10x", "desc": "Pw. leżenie tyłem, nogi zgięte, stopy oparte. Unoszenie głowy z dotknięciem brodą do klatki piersiowej, wytrzymać 3 sekundy.", "img": "https://via.placeholder.com/400x250?text=Unoszenie+głowy" },
+        { "title": "Unoszenie bioder", "reps": "10x", "desc": "Pw. leżenie tyłem, nogi zgięte, stopy oparte, ręce wzdłuż tułowia. Unoszenie bioder (mostek), wytrzymać 3 sekundy.", "img": "https://via.placeholder.com/400x250?text=Unoszenie+bioder" },
+        { "title": "Dotykanie kolanami podłoża", "reps": "Wykonaj starannie", "desc": "Pw. leżenie tyłem, nogi odwiedzione, zgięte w biodrach i kolanach. Naprzemienne dotykanie kolanami podłoża do wewnątrz (między nogami).", "img": "https://via.placeholder.com/400x250?text=Dotykanie+kolanami" },
+        { "title": "Wciskanie łokci", "reps": "3-4x", "desc": "Pw. leżenie tyłem, ręce na karku. Rozchylanie łokci z wciskaniem ich w podłoże (wdech), łączenie łokci przed sobą (wydech).", "img": "https://via.placeholder.com/400x250?text=Wciskanie+łokci" },
+        { "title": "Prostowanie kolan do podłoża", "reps": "10x", "desc": "Pw. leżenie tyłem, mocne prostowanie kolan z próbą wciśnięcia ich w podłoże, przytrzymać 5 sekund.", "img": "https://via.placeholder.com/400x250?text=Prostowanie+kolan" },
+        { "title": "Prostowanie kolan na wałku", "reps": "10x", "desc": "Pw. leżenie tyłem, wałek pod kolanami, prostowanie nóg w stawach kolanowych, wytrzymać 5 sekund.", "img": "https://via.placeholder.com/400x250?text=Prostowanie+na+wałku" },
+        { "title": "Naciskanie dłoni", "reps": "5-10x", "desc": "Pw. leżenie tyłem, ręce złożone jak do modlitwy przed klatką, łokcie na zewnątrz. Mocne naciskanie dłoni na dłoń, wytrzymać 5 sekund.", "img": "https://via.placeholder.com/400x250?text=Naciskanie+dłoni" },
+        { "title": "Głęboki oddech", "reps": "3-4x", "desc": "Pw. leżenie tyłem, spokojny wdech nosem i długi wydech ustami.", "img": "https://via.placeholder.com/400x250?text=Oddech" },
+        { "title": "Zginanie kolan przodem", "reps": "Po 10x na każdą nogę", "desc": "Pw. leżenie przodem (na brzuchu), ręce pod brodą, naprzemienne zginanie nóg w kolanach.", "img": "https://via.placeholder.com/400x250?text=Zginanie+kolan+przodem" },
+        { "title": "Wspięcie na palce w leżeniu", "reps": "Po 10x na każdą nogę", "desc": "Pw. leżenie przodem, wspięcie jednej nogi na palce z jednoczesnym jej prostowaniem w kolanie.", "img": "https://via.placeholder.com/400x250?text=Wspiecie+w+leżeniu" },
+        { "title": "Napinanie pośladków", "reps": "10x", "desc": "Pw. leżenie przodem, ręce pod brodą, mocne napinanie mięśni pośladków, wytrzymać 3 sekundy.", "img": "https://via.placeholder.com/400x250?text=Napinanie+pośladków" },
+        { "title": "Ściąganie łopatek", "reps": "10x", "desc": "Pw. leżenie przodem, głowa oparta brodą, ręce zgięte pod kątem 90°. Oderwanie rąk od materaca z jednoczesnym ściąganiem łopatek.", "img": "https://via.placeholder.com/400x250?text=Ściąganie+łopatek" },
+        { "title": "Unoszenie naprzemienne kończyn", "reps": "Po 10x na każdą stronę", "desc": "Pw. leżenie przodem, ręce wyprostowane przed sobą. Unoszenie lewej ręki i prawej nogi o około 10°, następnie zmiana.", "img": "https://via.placeholder.com/400x250?text=Unoszenie+naprzemienne" },
+        { "title": "Wspinanie na palce i pięty", "reps": "10x", "desc": "Pozycja stojąca. Naprzemienne wspinanie się na palce i przechodzenie na pięty.", "img": "https://via.placeholder.com/400x250?text=Palce-pięty" },
+        { "title": "Zginanie bioder i kolan stojąc", "reps": "Po 10x na każdą nogę", "desc": "Pozycja stojąca. Naprzemienne znoszenie nogi w biodrze i kolanie do kąta 90° z jednoczesnym wspięciem na palce nogi postawnej.", "img": "https://via.placeholder.com/400x250?text=Zginanie+stojąc" },
+        { "title": "Przysiady", "reps": "10x", "desc": "Pozycja stojąca. Klasyczne, spokojne przysiady. Trzymaj proste plecy.", "img": "https://via.placeholder.com/400x250?text=Przysiady" },
+        { "title": "Oddech w pozycji stojącej", "reps": "3-4x", "desc": "Pozycja stojąca. Uniesienie rąk do góry (wdech nosem), opuszczenie rąk (wydech ustami).", "img": "https://via.placeholder.com/400x250?text=Oddech+stojąc" }
     ];
 
     let currentIndex = 0;
 
     function updateUI() {
         const ex = exercises[currentIndex];
-        const progress = ((currentIndex) / exercises.length) * 100;
-        
-        document.getElementById('progress-fill').style.width = progress + "%";
-        document.getElementById('exercise-count').innerText = `Ćwiczenie ${currentIndex + 1} z ${exercises.length}`;
+        const total = exercises.length;
+        const progressPercent = Math.round((currentIndex / total) * 100);
+
+        // Teksty
         document.getElementById('ex-title').innerText = ex.title;
-        document.getElementById('ex-reps').innerText = ex.reps;
+        document.getElementById('ex-reps').innerText = "Powtórzenia: " + ex.reps;
         document.getElementById('ex-desc').innerText = ex.desc;
+        document.getElementById('ex-counter').innerText = `Ćwiczenie ${currentIndex + 1} z ${total}`;
+        
+        // Obrazek
         document.getElementById('ex-img').src = ex.img;
+        document.getElementById('ex-img').alt = "Instrukcja: " + ex.title;
+
+        // Pasek postępu
+        document.getElementById('progress-fill').style.width = progressPercent + "%";
+        document.getElementById('progress-text').innerText = progressPercent + "%";
     }
 
-    function nextExercise() {
+    function handleNext() {
         currentIndex++;
         
         if (currentIndex < exercises.length) {
             updateUI();
         } else {
-            showFinish();
+            finishWorkout();
         }
     }
 
-    function showFinish() {
+    function finishWorkout() {
         document.getElementById('exercise-screen').classList.add('hidden');
         document.getElementById('progress-fill').style.width = "100%";
+        document.getElementById('progress-text').innerText = "100%";
+        
         const finishScreen = document.getElementById('finish-screen');
         finishScreen.style.display = 'block';
         
-        // Strzał z konfetti!
-        confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 }
-        });
+        // Efekt konfetti
+        const duration = 3 * 1000;
+        const end = Date.now() + duration;
+
+        (function frame() {
+            confetti({
+                particleCount: 3,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#27ae60', '#2980b9', '#f1c40f']
+            });
+            confetti({
+                particleCount: 3,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#27ae60', '#2980b9', '#f1c40f']
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
     }
 
-    // Inicjalizacja pierwszego ćwiczenia
+    // Start aplikacji
     updateUI();
 </script>
 
