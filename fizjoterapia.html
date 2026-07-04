@@ -202,7 +202,7 @@
     <div id="screen-intro" class="screen active">
         <h2>Twój Spersonalizowany Trening</h2>
         <div class="instruction-box">
-            System przełącza ćwiczenia w trybie <strong>stacyjnym (seria po serii)</strong>. Po każdej serii następuje 60 sekund kontrolowanego odpoczynku z treningiem oddechowym przeponą, aby zminimalizować napięcia żebrowe.
+            System przełącza ćwiczenia w trybie <strong>stacyjnym (seria po serii)</strong>. Każde ćwiczenie wykonujesz w schemacie <strong>3 serii po 12 powtórzeń</strong>. Po każdej serii następuje 60 sekund kontrolowanego odpoczynku z treningiem oddechowym przeponą.
         </div>
         <div class="tip-box">
             <strong>Zasada dnia:</strong> Liczy się estetyka i precyzja, nie pośpiech. Jeśli poczujesz ostry ból - przerwij ćwiczenie.
@@ -215,7 +215,7 @@
         <h2 id="exercise-title"></h2>
         <div class="instruction-box" id="exercise-desc"></div>
         <div class="tip-box" id="exercise-tip"></div>
-        <button class="btn" id="action-btn" onclick="completeSeria()">Zakończyłem serię 1 (Zacznij odpoczynek)</button>
+        <button class="btn" id="action-btn" onclick="completeSeria()"></button>
     </div>
 
     <div id="screen-rest" class="screen">
@@ -244,7 +244,7 @@
     </div>
 </div>
 
-<script>
+<script {nonce}>
     const exercises = [
         { title: "1. Przenoszenie kettla za siebie na wałku", desc: "Kładziemy się na plecach, pod biodra i pośladki wałek. W wyprostowanych rękach kettlebell. Nogi zgięte pod kątem 90° (bliżej brzucha). Z wydechem przenieś kettla za siebie aż do podłogi. Brzuch napięty.", tip: "<strong>Wskazówka:</strong> Kontroluj dolne żebra. Nie pozwól, aby klatka piersiowa unosiła się do góry podczas ruchu rąk w tył." },
         { title: "2. Wstawanie z kettlem z leżenia", desc: "Kładziemy się na plecach, nogi ugięte, stopy oparte o podłoże. Ramiona za siebie, w rękach kettlebell. Z wydechem podnieś się do góry z wyciągniętymi ramionami ku górze.", tip: "<strong>Wskazówka:</strong> Ruch wykonuj płynnie z mięśni brzucha. Unikaj gwałtownego zrywania szyi na początku ruchu." },
@@ -260,6 +260,7 @@
     let currentExerciseIndex = 0;
     let currentSeria = 1;
     const totalSeries = 3;
+    const repsPerSeia = 12;
     let timerInterval;
     let breathInterval;
 
@@ -285,11 +286,11 @@
     function updateExerciseScreen() {
         const ex = exercises[currentExerciseIndex];
         document.getElementById('progress-text').innerText = `Ćwiczenie ${currentExerciseIndex + 1} z ${exercises.length}`;
-        document.getElementById('exercise-badge').innerText = `ĆWICZENIE ${currentExerciseIndex + 1} • SERIA ${currentSeria} z ${totalSeries}`;
+        document.getElementById('exercise-badge').innerText = `ĆWICZENIE ${currentExerciseIndex + 1} • SERIA ${currentSeria} z ${totalSeries} • Wykonaj ${repsPerSeia} powtórzeń`;
         document.getElementById('exercise-title').innerText = ex.title;
         document.getElementById('exercise-desc').innerHTML = ex.desc;
         document.getElementById('exercise-tip').innerHTML = ex.tip;
-        document.getElementById('action-btn').innerText = `Zakończyłem serię ${currentSeria} (Zacznij odpoczynek)`;
+        document.getElementById('action-btn').innerText = `Zakończyłem serię (12 powtórzeń) ➔ Zacznij odpoczynek`;
         updateProgressBar();
     }
 
