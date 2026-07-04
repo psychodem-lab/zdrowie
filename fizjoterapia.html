@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Treningowy - Fizjoterapia</title>
+    <style>
+        :root {
+            --primary: #2b6cb0;
+            --success: #48bb78;
+            --bg: #f7fafc;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0 0 5px 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .meta {
+            font-size: 0.9rem;
+            color: #718096;
+            margin: 0;
+        }
+
+        .progress-bar-container {
+            background: var(--border);
+            border-radius: 8px;
+            height: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: var(--success);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .exercise-card.active {
+            border-left-color: var(--primary);
+            transform: scale(1.01);
+        }
+
+        .exercise-card.completed {
+            border-left-color: var(--success);
+            opacity: 0.7;
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .exercise-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .scheme {
+            background: #ebf8ff;
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .instructions {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+
+        .sets-tracker {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .set-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .set-btn.done {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .next-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            display: none;
+            transition: background 0.2s;
+        }
+
+        .next-btn:hover {
+            background: #2b6cb0;
+        }
+
+        .exercise-card.active .next-btn {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Ćwiczenia Fizjoterapeutyczne</h1>
+        <p class="meta">Wtorek, Piątek, Niedziela | Schemat: 3 x 12 powtórzeń</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </header>
+
+    <div id="workout-container"></div>
+</div>
+
+<script>
+    const exercises = [
+        {
+            id: 1,
+            title: "1. Przenoszenie kettla za siebie na wałku",
+            desc: "Kładziemy się na plecach, pod biodra i pośladki podkładamy wałek. W wyprostowanych rękach trzymamy kettlebell. Nogi zgięte pod kątem 90° (bliżej brzucha). Z wydechem przenieś kettla za siebie aż do podłogi. Brzuch napięty. Dbaj o estetykę ruchu."
+        },
+        {
+            id: 2,
+            title: "2. Wstawanie z kettlem z leżenia",
+            desc: "Kładziemy się na plecach, nogi ugięte, stopy oparte o podłoże. Ramiona za siebie, w rękach kettlebell. Z wydechem podnieś się do góry z wyciągniętymi ramionami ku górze."
+        },
+        {
+            id: 3,
+            title: "3. Mostek biodrowy z kettlem i unoszeniem nóg",
+            desc: "Kładziemy się na plecach, nogi ugięte, stopy oparte o podłoże. Biodra unosimy do góry. Proste ramiona trzymamy w górze z kettlem. Wykonujemy naprzemienne odrywanie nogi i przyciąganie do kettla. Wypychamy biodra do góry, nie brzuch. Miednica zrównana z udami."
+        },
+        {
+            id: 4,
+            title: "4. Dzień dobry z kettlem przy klatce",
+            desc: "Stój w lekkim rozkroku. Kettle w dłoniach blisko klatki piersiowej. Wykonaj opad tułowia do przodu, biodra wypychając do tyłu. Ruch zachodzi z bioder. Łopatki ściągnięte, zachowany lekki przeprost (lordoza) w plecach. Staramy się wyczuć pracę prostowników grzbietu. Nie uginamy mocno kolan."
+        },
+        {
+            id: 5,
+            title: "5. Martwy ciąg z prostymi rękami",
+            desc: "To samo założenie biomechaniczne co w ćwiczeniu 4 (ruch z bioder, proste plecy), ale kettlebell trzymany jest na prostych, opuszczonych w dół rękach."
+        },
+        {
+            id: 6,
+            title: "6. Skłony boczne z kettlem",
+            desc: "Stój prosto, nogi na szerokość bioder. Kettlebell w jednej dłoni. Wykonuj kontrolowane skłony tułowia do boku w płaszczyźnie bocznej."
+        },
+        {
+            id: 7,
+            title: "7. Wykroki ze skrętem tułowia",
+            desc: "Wykonaj wykrok w przód z jednoczesnym kontrolowanym skrętem tułowia (rotacją) trzymając kettlebell blisko ciała."
+        },
+        {
+            id: 8,
+            title: "8. Dookoła świata ze swingiem",
+            desc: "Krążenia kettla dookoła świata od dołu przez górę połączone z dynamicznym ruchem typu swing. Kontroluj stabilność centralną."
+        },
+        {
+            id: 9,
+            title: "9. Wiosłowanie jednorącz w klęku podpartym",
+            desc: "Ćwiczenie z użyciem stołu lub krzesła, pozycja klęku jednonóż z podparciem ręki. Wykonaj cofnięcie łopatki do tyłu, prowadząc ramię blisko tułowia. Łopatka ma się wyraźnie przybliżać do kręgosłupa."
+        }
+    ];
+
+    let currentActiveIndex = 0;
+    const completedExercises = new Set();
+
+    function renderWorkout() {
+        const container = document.getElementById('workout-container');
+        container.innerHTML = '';
+
+        exercises.forEach((ex, index) => {
+            const card = document.createElement('div');
+            card.className = `exercise-card`;
+            if (index === currentActiveIndex) card.classList.add('active');
+            if (completedExercises.has(ex.id)) card.classList.add('completed');
+
+            card.innerHTML = `
+                <div class="exercise-header">
+                    <p class="exercise-title">${ex.title}</p>
+                    <span class="scheme">3 x 12</span>
+                </div>
+                <div class="instructions">${ex.desc}</div>
+                <div class="sets-tracker">
+                    <span>Serie:</span>
+                    <button class="set-btn" onclick="toggleSet(this, ${ex.id}, 1)">1</button>
+                    <button class="set-btn" onclick="toggleSet(this, ${ex.id}, 2)">2</button>
+                    <button class="set-btn" onclick="toggleSet(this, ${ex.id}, 3)">3</button>
+                </div>
+                <button class="next-btn" onclick="goToNext(${index})">
+                    ${index === exercises.length - 1 ? 'Zakończ trening!' : 'Następne ćwiczenie ➔'}
+                </button>
+            `;
+            container.appendChild(card);
+        });
+        updateProgressBar();
+    }
+
+    window.toggleSet = function(btn, exId, setNum) {
+        btn.classList.toggle('done');
+        
+        // Sprawdź czy wszystkie 3 serie dla tego ćwiczenia są zrobione
+        const card = btn.closest('.exercise-card');
+        const doneButtons = card.querySelectorAll('.set-btn.done');
+        
+        if (doneButtons.length === 3) {
+            completedExercises.add(exId);
+        } else {
+            completedExercises.delete(exId);
+        }
+        updateProgressBar();
+    };
+
+    window.goToNext = function(currentIndex) {
+        // Oznacz obecne jako ukończone nawet jeśli zapomniano kliknąć serii
+        completedExercises.add(exercises[currentIndex].id);
+        
+        if (currentIndex < exercises.length - 1) {
+            currentActiveIndex = currentIndex + 1;
+        } else {
+            alert('Brawo! Trening wykonany estetycznie i bezpiecznie!');
+            currentActiveIndex = -1; // Ukryj aktywność
+        }
+        renderWorkout();
+        
+        // Przewiń widok do aktywnego ćwiczenia
+        setTimeout(() => {
+            const activeCard = document.querySelector('.exercise-card.active');
+            if (activeCard) activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    };
+
+    function updateProgressBar() {
+        const percent = (completedExercises.size / exercises.length) * 100;
+        document.getElementById('progressBar').style.width = `${percent}%`;
+    }
+
+    // Pierwsze uruchomienie
+    renderWorkout();
+</script>
+
+</body>
+</html>
