@@ -199,19 +199,17 @@
         <div class="progress-bar" id="progress-bar"></div>
     </div>
 
-    <!-- EKRAN STARTOWY -->
     <div id="screen-intro" class="screen active">
         <h2>Twój Spersonalizowany Trening</h2>
         <div class="instruction-box">
-            System przełącza ćwiczenia w trybie <strong>stacyjnym (seria po serii)</strong>[span_1](start_span)[span_1](end_span). Po każdej serii następuje 60 sekund kontrolowanego odpoczynku z treningiem oddechowym przeponą, aby zminimalizować napięcia żebrowe[span_2](start_span)[span_2](end_span).
+            System przełącza ćwiczenia w trybie <strong>stacyjnym (seria po serii)</strong>. Po każdej serii następuje 60 sekund kontrolowanego odpoczynku z treningiem oddechowym przeponą, aby zminimalizować napięcia żebrowe.
         </div>
         <div class="tip-box">
-            <strong>Zasada dnia:</strong> Liczy się estetyka i precyzja, nie pośpiech[span_3](start_span)[span_3](end_span). Jeśli poczujesz ostry ból - przerwij ćwiczenie[span_4](start_span)[span_4](end_span).
+            <strong>Zasada dnia:</strong> Liczy się estetyka i precyzja, nie pośpiech. Jeśli poczujesz ostry ból - przerwij ćwiczenie.
         </div>
         <button class="btn" onclick="startWorkout()">Rozpocznij Trening</button>
     </div>
 
-    <!-- EKRAN APRAKTYCZNY (DYNAMICZNY) -->
     <div id="screen-workout" class="screen">
         <div id="exercise-badge" class="badge"></div>
         <h2 id="exercise-title"></h2>
@@ -220,13 +218,12 @@
         <button class="btn" id="action-btn" onclick="completeSeria()">Zakończyłem serię 1 (Zacznij odpoczynek)</button>
     </div>
 
-    <!-- EKRAN ODPOCZYNKU -->
     <div id="screen-rest" class="screen">
         <h2 class="rest-title">Czas na odpoczynek</h2>
         <div class="timer-display" id="timer">60</div>
         
         <div class="instruction-box">
-            <strong>Co robisz teraz:</strong> Przejdź się spokojnie po pokoju (nie siadaj)[span_5](start_span)[span_5](end_span). Wyrównaj tętno i oddychaj wyłącznie torem brzusznym/przeponowym (dolne żebra rozszerzają się na boki, brzuch rośnie, klatka piersiowa stabilna)[span_6](start_span)[span_6](end_span).
+            <strong>Co robisz teraz:</strong> Przejdź się spokojnie po pokoju (nie siadaj). Wyrównaj tętno i oddychaj wyłącznie torem brzusznym/przeponowym (dolne żebra rozszerzają się na boki, brzuch rośnie, klatka piersiowa stabilna).
         </div>
 
         <div class="breathing-circle-container">
@@ -237,11 +234,10 @@
         <button class="btn" style="background: var(--accent);" onclick="skipRest()">Pomiń odpoczynek</button>
     </div>
 
-    <!-- EKRAN KOŃCOWY -->
     <div id="screen-summary" class="screen summary-screen">
         <h2 style="color: var(--success);">Trening Ukończony!</h2>
         <div class="instruction-box">
-            Świetna robota. Wszystkie serie zostały wykonane estetycznie i z pełną kontrolą[span_7](start_span)[span_7](end_span). Twoje tkanki otrzymały optymalny bodziec do bezpiecznej przebudowy[span_8](start_span)[span_8](end_span).
+            Świetna robota. Wszystkie serie zostały wykonane estetycznie i z pełną kontrolą. Twoje tkanki otrzymały optymalny bodziec do bezpiecznej przebudowy.
         </div>
         <p>Możesz teraz bezpiecznie wrócić do codziennych obowiązków taty.</p>
         <button class="btn" onclick="location.reload()">Zacznij od nowa</button>
@@ -250,15 +246,15 @@
 
 <script>
     const exercises = [
-        { title: "1. Przenoszenie kettla za siebie na wałku", desc: "Kładziemy się na plecach, pod biodra i pośladki wałek. W wyprostowanych rękach kettlebell. Nogi zgięte pod kątem 90° (bliżej brzucha). Z wydechem przenieś kettla za siebie aż do podłogi. Brzuch napięty[span_9](start_span)[span_9](end_span).", tip: "<strong>Wskazówka:</strong> Kontroluj dolne żebra. Nie pozwól, aby klatka piersiowa uciekać unosiła się do góry podczas ruchu rąk w tył[span_10](start_span)[span_10](end_span)." },
-        { title: "2. Wstawanie z kettlem z leżenia", desc: "Kładziemy się na plecach, nogi ugięte, stopy oparte o podłoże. Ramiona za siebie, w rękach kettlebell. Z wydechem podnieś się do góry z wyciągniętymi ramionami ku górze[span_11](start_span)[span_11](end_span).", tip: "<strong>Wskazówka:</strong> Ruch wykonuj płynnie z mięśni brzucha. Unikaj gwałtownego zrywania szyi na początku ruchu[span_12](start_span)[span_12](end_span)." },
-        { title: "3. Mostek biodrowy z kettlem i unoszeniem nóg", desc: "Kładziemy się na plecach, nogi ugięte, stopy oparte o podłoże. Biodra do góry. Proste ramiona w górze z kettlem. Naprzemienne odrywanie nogi i przyciąganie do kettla[span_13](start_span)[span_13](end_span).", tip: "<strong>Wskazówka:</strong> Wypychamy biodra do góry, nie brzuch. Miednica musi być idealnie zrównana z udami, nie pozwól jej opadać przy odrywaniu stopy[span_14](start_span)[span_14](end_span)." },
-        { title: "4. Dzień dobry z kettlem przy klatce", desc: "Stój w lekkim rozkroku. Kettle w dłoniach blisko klatki piersiowej. Opad tułowia do przodu, biodra wypychamy do tyłu. Ruch z bioder. Łopatki ściągnięte, przeprost w plecach. Nie uginamy kolan[span_15](start_span)[span_15](end_span).", tip: "<strong>Wskazówka:</strong> Kluczowy ruch dla Twoich pleców. Poczuj pracę prostowników grzbietu i pośladków. Kręgosłup pozostaje sztywny jak deska[span_16](start_span)[span_16](end_span)." },
-        { title: "5. Martwy ciąg z prostymi rękami", desc: "Pozycja stojąca, ruch identyczny jak w ćwiczeniu 4 (ruch wyłącznie z bioder, plecy idealnie proste), ale ramiona zwisają swobodnie w dół trzymając kettlebell[span_17](start_span)[span_17](end_span).", tip: "<strong>Wskazówka:</strong> Prowadź kettlebell jak najbliżej swoich piszczeli i ud. Odsunięcie ciężaru w przód przeciąży plecy[span_18](start_span)[span_18](end_span)." },
-        { title: "6. Skłony boczne z kettlem", desc: "Stój prosto, nogi na szerokość bioder. Kettlebell w jednej dłoni wzdłuż tułowia. Wykonaj kontrolowany skłon boczny, a następnie wróć do pozycji wyprostowanej[span_19](start_span)[span_19](end_span).", tip: "<strong>Wskazówka:</strong> Ruch wykonuj wyłącznie w płaszczyźnie bocznej. Nie pochylaj się do przodu ani w tył podczas skłonu[span_20](start_span)[span_20](end_span)." },
-        { title: "7. Wykroki ze skrętem tułowia", desc: "Wykonaj krok w przód do wykroku. Trzymając kettlebell blisko klatki piersiowej, wykonaj kontrolowany, stabilny skręt tułowia w stronę nogi wykrocznej[span_21](start_span)[span_21](end_span).", tip: "<strong>Wskazówka:</strong> Stabilizuj miednicę i kolano. Skręt ma zachodzić w klatce piersiowej, a nie w pasie lędźwiowym[span_22](start_span)[span_22](end_span)." },
-        { title: "8. Dookoła świata ze swingiem", desc: "Stojąc stabilnie, wykonaj krążenia kettla dookoła ciała („dookoła świata”) od dołu przez górę, płynnie łącząc ruch z biodrowym swingiem przed sobą[span_23](start_span)[span_23](end_span).", tip: "<strong>Wskazówka:</strong> Wykorzystaj relatywnie lekki ciężar. Ruch wymaga ciągłego, aktywnego napięcia mięśni brzucha[span_24](start_span)[span_24](end_span)." },
-        { title: "9. Wiosłowanie jednorącz w klęku podpartym", desc: "Klęk jednonóż przy stole lub krześle, jedna ręka podparta. W drugiej ręce kettlebell. Wykonaj cofnięcie łopatki do tyłu, prowadząc ramię blisko tułowia[span_25](start_span)[span_25](end_span).", tip: "<strong>Wskazówka:</strong> Ruch zainicjuj łopatką - ma zbliżyć się wyraźnie do kręgosłupa. Nie rotuj całego tułowia do góry[span_26](start_span)[span_26](end_span)." }
+        { title: "1. Przenoszenie kettla za siebie na wałku", desc: "Kładziemy się na plecach, pod biodra i pośladki wałek. W wyprostowanych rękach kettlebell. Nogi zgięte pod kątem 90° (bliżej brzucha). Z wydechem przenieś kettla za siebie aż do podłogi. Brzuch napięty.", tip: "<strong>Wskazówka:</strong> Kontroluj dolne żebra. Nie pozwól, aby klatka piersiowa unosiła się do góry podczas ruchu rąk w tył." },
+        { title: "2. Wstawanie z kettlem z leżenia", desc: "Kładziemy się na plecach, nogi ugięte, stopy oparte o podłoże. Ramiona za siebie, w rękach kettlebell. Z wydechem podnieś się do góry z wyciągniętymi ramionami ku górze.", tip: "<strong>Wskazówka:</strong> Ruch wykonuj płynnie z mięśni brzucha. Unikaj gwałtownego zrywania szyi na początku ruchu." },
+        { title: "3. Mostek biodrowy z kettlem i unoszeniem nóg", desc: "Kładziemy się na plecach, nogi ugięte, stopy oparte o podłoże. Biodra do góry. Proste ramiona w górze z kettlem. Naprzemienne odrywanie nogi i przyciąganie do kettla.", tip: "<strong>Wskazówka:</strong> Wypychamy biodra do góry, nie brzuch. Miednica musi być idealnie zrównana z udami, nie pozwól jej opadać przy odrywaniu stopy." },
+        { title: "4. Dzień dobry z kettlem przy klatce", desc: "Stój w lekkim rozkroku. Kettle w dłoniach blisko klatki piersiowej. Opad tułowia do przodu, biodra wypychamy do tyłu. Ruch z bioder. Łopatki ściągnięte, przeprost w plecach. Nie uginamy kolan.", tip: "<strong>Wskazówka:</strong> Kluczowy ruch dla Twoich pleców. Poczuj pracę prostowników grzbietu i pośladków. Kręgosłup pozostaje sztywny jak deska." },
+        { title: "5. Martwy ciąg z prostymi rękami", desc: "Pozycja stojąca, ruch identyczny jak w ćwiczeniu 4 (ruch wyłącznie z bioder, plecy idealnie proste), ale ramiona zwisają swobodnie w dół trzymając kettlebell.", tip: "<strong>Wskazówka:</strong> Prowadź kettlebell jak najbliżej swoich piszczeli i ud. Odsunięcie ciężaru w przód przeciąży plecy." },
+        { title: "6. Skłony boczne z kettlem", desc: "Stój prosto, nogi na szerokość bioder. Kettlebell w jednej dłoni wzdłuż tułowia. Wykonaj kontrolowany skłon boczny, a następnie wróć do pozycji wyprostowanej.", tip: "<strong>Wskazówka:</strong> Ruch wykonuj wyłącznie w płaszczyźnie bocznej. Nie pochylaj się do przodu ani w tył podczas skłonu." },
+        { title: "7. Wykroki ze skrętem tułowia", desc: "Wykonaj krok w przód do wykroku. Trzymając kettlebell blisko klatki piersiowej, wykonaj kontrolowany, stabilny skręt tułowia w stronę nogi wykrocznej.", tip: "<strong>Wskazówka:</strong> Stabilizuj miednicę i kolano. Skręt ma zachodzić w klatce piersiowej, a nie w pasie lędźwiowym." },
+        { title: "8. Dookoła świata ze swingiem", desc: "Stojąc stabilnie, wykonaj krążenia kettla dookoła ciała („dookoła świata”) od dołu przez górę, płynnie łącząc ruch z biodrowym swingiem przed sobą.", tip: "<strong>Wskazówka:</strong> Wykorzystaj relatywnie lekki ciężar. Ruch wymaga ciągłego, aktywnego napięcia mięśni brzucha." },
+        { title: "9. Wiosłowanie jednorącz w klęku podpartym", desc: "Klęk jednonóż przy stole lub krześle, jedna ręka podparta. W drugiej ręce kettlebell. Wykonaj cofnięcie łopatki do tyłu, prowadząc ramię blisko tułowia.", tip: "<strong>Wskazówka:</strong> Ruch zainicjuj łopatką - ma zbliżyć się wyraźnie do kręgosłupa. Nie rotuj całego tułowia do góry." }
     ];
 
     let currentExerciseIndex = 0;
@@ -267,7 +263,6 @@
     let timerInterval;
     let breathInterval;
 
-    // Oblicz całkowitą liczbę kroków treningu (9 ćwiczeń * 3 serie)
     const totalSteps = exercises.length * totalSeries;
     let currentStep = 0;
 
@@ -302,7 +297,6 @@
         currentStep++;
         updateProgressBar();
         
-        // Sprawdź czy to była ostatnia seria ostatniego ćwiczenia
         if (currentExerciseIndex === exercises.length - 1 && currentSeria === totalSeries) {
             showScreen('screen-summary');
             document.getElementById('progress-text').innerText = "Trening zakończony";
@@ -318,7 +312,6 @@
         let timeLeft = 60;
         document.getElementById('timer').innerText = timeLeft;
         
-        // Główne odliczanie zegara
         clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             timeLeft--;
@@ -328,8 +321,7 @@
             }
         }, 1000);
 
-        // Licznik/Pacer Treningu Oddechowego (Kwadratowy: 4s wdech, 4s zatrzymanie, 4s wydech, 4s zatrzymanie)
-        let breathState = 0; // 0: wdech, 1: zatrzymanie, 2: wydech, 3: zatrzymanie
+        let breathState = 0;
         const circle = document.getElementById('breath-circle');
         const bText = document.getElementById('breath-text');
         
@@ -356,8 +348,8 @@
         }
         
         clearInterval(breathInterval);
-        runBreathingCycle(); // Uruchom od razu pierwszą fazę
-        breathInterval = setInterval(runBreathingCycle, 4000); // Fazy zmieniają się co 4 sekundy
+        runBreathingCycle();
+        breathInterval = setInterval(runBreathingCycle, 4000);
     }
 
     function skipRest() {
@@ -368,7 +360,6 @@
         clearInterval(timerInterval);
         clearInterval(breathInterval);
         
-        // Logika progresji serii i ćwiczeń
         if (currentSeria < totalSeries) {
             currentSeria++;
         } else {
