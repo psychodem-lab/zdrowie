@@ -2,8 +2,8 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projektant Ogrodu Leczniczego - Topografia & JSON</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Projektant Ogrodu Leczniczego - Mobilny & JSON</title>
     <style>
         :root {
             --bg-color: #1a2318;
@@ -18,7 +18,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -26,95 +27,96 @@
             color: var(--text-color);
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
         header {
             background-color: #121910;
-            padding: 12px 20px;
+            padding: 10px 14px;
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
             border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         header h1 {
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             color: #92d075;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .toolbar {
             display: flex;
-            gap: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+            width: 100%;
         }
 
         button, .btn-label {
             background-color: var(--accent-color);
             color: white;
             border: none;
-            padding: 8px 14px;
+            padding: 10px 12px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            gap: 4px;
+            flex: 1 1 calc(50% - 6px);
+            min-height: 42px;
         }
 
-        button:hover, .btn-label:hover {
-            background-color: var(--accent-hover);
+        button:active, .btn-label:active {
+            transform: scale(0.98);
         }
 
-        button.secondary {
+        button.secondary, .btn-label.secondary {
             background-color: #3a4e37;
-        }
-
-        button.secondary:hover {
-            background-color: #4d6649;
-        }
-
-        button.danger {
-            background-color: #a83232;
-        }
-
-        button.danger:hover {
-            background-color: #c94242;
         }
 
         main {
             display: flex;
+            flex-direction: column;
             flex: 1;
-            overflow: hidden;
         }
 
         .canvas-container {
-            flex: 1;
+            width: 100%;
+            background-color: #0f140e;
+            padding: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #0f140e;
-            padding: 20px;
-            position: relative;
-            overflow: auto;
+            touch-action: none; /* Blokuje przewijanie strony palcem podczas przeciągania na canvasie */
+            user-select: none;
         }
 
         canvas {
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            width: 100%;
+            max-width: 1100px;
+            height: auto;
+            aspect-ratio: 11 / 8;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             border-radius: 8px;
-            cursor: crosshair;
             background-color: #72b05b;
+            touch-action: none;
         }
 
         sidebar {
-            width: 420px;
+            width: 100%;
             background-color: var(--panel-bg);
-            border-left: 1px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
         }
@@ -127,25 +129,23 @@
 
         .tab {
             flex: 1;
-            padding: 12px;
+            padding: 12px 6px;
             text-align: center;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: bold;
             color: #8fa88a;
-            border-bottom: 2px solid transparent;
+            border-bottom: 3px solid transparent;
         }
 
         .tab.active {
             color: #a6e38c;
-            border-bottom: 2px solid #a6e38c;
+            border-bottom: 3px solid #a6e38c;
             background-color: var(--panel-bg);
         }
 
         .tab-content {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
+            padding: 14px;
             display: none;
         }
 
@@ -153,56 +153,61 @@
             display: block;
         }
 
-        /* JSON Area */
         textarea {
             width: 100%;
-            height: calc(100vh - 220px);
+            height: 320px;
             background-color: #141c13;
             color: #a3e687;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 12px;
+            padding: 10px;
             font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 0.8rem;
-            line-height: 1.4;
-            resize: none;
+            font-size: 0.78rem;
+            line-height: 1.35;
+            resize: vertical;
         }
 
-        /* Controls Form */
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             margin-bottom: 4px;
             color: #b0c4ad;
         }
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 8px;
-            border-radius: 4px;
+            padding: 10px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
             background-color: #192218;
             color: white;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
         }
 
-        /* Legend List */
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 8px;
+        }
+
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 6px 8px;
-            border-bottom: 1px solid #2e3d2c;
-            font-size: 0.85rem;
+            gap: 8px;
+            padding: 8px;
+            background-color: #1a2519;
+            border-radius: 6px;
+            border: 1px solid #2e3d2c;
+            font-size: 0.8rem;
         }
 
         .badge {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -211,6 +216,7 @@
             font-size: 0.75rem;
             color: black;
             border: 1px solid #000;
+            flex-shrink: 0;
         }
 
         .info-box {
@@ -218,25 +224,67 @@
             border: 1px solid #3d5438;
             padding: 10px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             line-height: 1.4;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: #c2d6bf;
         }
 
         input[type="file"] {
             display: none;
         }
+
+        /* Układ dla ekranów komputerów i tabletów poziomo */
+        @media (min-width: 850px) {
+            body {
+                height: 100vh;
+                overflow: hidden;
+            }
+            header {
+                padding: 12px 20px;
+            }
+            header h1 {
+                font-size: 1.2rem;
+            }
+            .toolbar {
+                width: auto;
+            }
+            button, .btn-label {
+                flex: none;
+                padding: 8px 14px;
+                min-height: auto;
+            }
+            main {
+                flex-direction: row;
+                overflow: hidden;
+            }
+            .canvas-container {
+                flex: 1;
+                padding: 20px;
+                overflow: auto;
+            }
+            sidebar {
+                width: 400px;
+                border-top: none;
+                border-left: 1px solid var(--border-color);
+            }
+            textarea {
+                height: calc(100vh - 200px);
+            }
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🌱 Projektant Ogrodu Leczniczego (JSON Viewer & Editor)</h1>
+        <h1>🌱 Projektant Ogrodu Leczniczego</h1>
         <div class="toolbar">
-            <button class="secondary" onclick="resetToDefault()">🔄 Domyślny Ogród</button>
+            <button class="secondary" onclick="resetToDefault()">🔄 Domyślny</button>
             <label class="btn-label secondary">
-                📂 Wczytaj JSON <input type="file" id="importJsonFile" accept=".json" onchange="importJSONFile(event)">
+                📂 JSON <input type="file" id="importJsonFile" accept=".json" onchange="importJSONFile(event)">
             </label>
             <button class="secondary" onclick="exportJSON()">💾 Pobierz JSON</button>
             <button onclick="exportPNG()">📷 Pobierz PNG</button>
@@ -250,7 +298,7 @@
 
         <sidebar>
             <div class="tabs">
-                <div class="tab active" onclick="switchTab('legend')">📋 Legenda Roślin</div>
+                <div class="tab active" onclick="switchTab('legend')">📋 Legenda</div>
                 <div class="tab" onclick="switchTab('add')">➕ Dodaj Roślinę</div>
                 <div class="tab" onclick="switchTab('json')">⚙️ Kod JSON</div>
             </div>
@@ -258,9 +306,9 @@
             <!-- TAB 1: LEGENDA -->
             <div id="tab-legend" class="tab-content active">
                 <div class="info-box">
-                    💡 <b>Instrukcja:</b> Możesz bezpośrednio przesuwać rośliny i drzewa na mapie – wystarczy kliknąć obiekt myszką i go przeciągnąć.
+                    📱 <b>Wskazówka mobilna:</b> Możesz przesuwać rośliny palcem bezpośrednio po ekranie mapy.
                 </div>
-                <div id="legendList"></div>
+                <div id="legendList" class="legend-grid"></div>
             </div>
 
             <!-- TAB 2: DODAJ ROŚLINĘ -->
@@ -301,7 +349,7 @@
             <!-- TAB 3: JSON EDITOR -->
             <div id="tab-json" class="tab-content">
                 <div class="info-box">
-                    Edytuj strukturę JSON w czasie rzeczywistym. Kliknij "Zastosuj Zmiany", aby odświeżyć grafikę.
+                    Edytuj JSON i kliknij "Zastosuj Zmiany", aby zaktualizować projekt.
                 </div>
                 <textarea id="jsonTextArea"></textarea>
                 <button style="width:100%; margin-top:10px;" onclick="applyJsonFromTextarea()">✅ Zastosuj Zmiany z JSON</button>
@@ -310,7 +358,6 @@
     </main>
 
     <script>
-        // DOMYŚLNA STRUKTURA DANYCH DLA OGRODU LECZNICZEGO
         const defaultGardenData = {
             "title": "TOPOGRAFICZNY PLAN OGRODU LECZNICZEGO",
             "dimensions": { "width": 22, "height": 16 },
@@ -409,8 +456,7 @@
         const canvas = document.getElementById('gardenCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Map dimensions and scale
-        const margin = 60;
+        const margin = 50;
         let scaleX = (canvas.width - 2 * margin) / gardenData.dimensions.width;
         let scaleY = (canvas.height - 2 * margin) / gardenData.dimensions.height;
 
@@ -419,7 +465,7 @@
         function toPx(x, y) {
             return {
                 px: margin + x * scaleX,
-                py: canvas.height - margin - y * scaleY // Invert Y axis for topographical standard
+                py: canvas.height - margin - y * scaleY
             };
         }
 
@@ -430,21 +476,32 @@
             };
         }
 
-        // --- RENDEROWANIE OGRODU ---
+        // Pomocnicza funkcja do przeliczania punktów dotyku/myszy na piksele płótna (z uwzględnieniem skalowania CSS)
+        function getCanvasCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleFactorX = canvas.width / rect.width;
+            const scaleFactorY = canvas.height / rect.height;
+
+            return {
+                x: (e.clientX - rect.left) * scaleFactorX,
+                y: (e.clientY - rect.top) * scaleFactorY
+            };
+        }
+
         function render() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 1. Tło trawnika
+            // Trawnik
             ctx.fillStyle = '#72b05b';
             ctx.fillRect(margin, margin, canvas.width - 2*margin, canvas.height - 2*margin);
             ctx.strokeStyle = '#2b401d';
             ctx.lineWidth = 2;
             ctx.strokeRect(margin, margin, canvas.width - 2*margin, canvas.height - 2*margin);
 
-            // 2. Linie Poziomicowe (Topografia)
+            // Poziomice
             drawContourLines();
 
-            // 3. Strefy ogrodu (Poligony)
+            // Strefy
             gardenData.zones.forEach(zone => {
                 if (zone.points.length < 3) return;
                 ctx.beginPath();
@@ -464,7 +521,7 @@
                 ctx.stroke();
             });
 
-            // 4. Ścieżki żwirowe
+            // Ścieżki
             gardenData.paths.forEach(path => {
                 if (path.points.length < 2) return;
                 ctx.beginPath();
@@ -481,7 +538,7 @@
                 ctx.stroke();
             });
 
-            // 5. Elementy Dekoracyjne (Ławka, Poidełko)
+            // Dekoracje
             gardenData.decorations.forEach(dec => {
                 const pt = toPx(dec.x, dec.y);
                 if (dec.type === 'bench') {
@@ -501,18 +558,16 @@
                 }
             });
 
-            // 6. Drzewa i Krzewy (Cienie i Korony)
+            // Drzewa
             gardenData.trees.forEach(tree => {
                 const pt = toPx(tree.x, tree.y);
                 const rPx = tree.r * scaleX;
 
-                // Cień
                 ctx.beginPath();
                 ctx.arc(pt.px + 8, pt.py + 8, rPx, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(0,0,0,0.2)';
                 ctx.fill();
 
-                // Korona
                 ctx.beginPath();
                 ctx.arc(pt.px, pt.py, rPx, 0, Math.PI * 2);
                 ctx.fillStyle = tree.color;
@@ -521,7 +576,6 @@
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // Identyfikator
                 ctx.beginPath();
                 ctx.arc(pt.px, pt.py, 12, 0, Math.PI * 2);
                 ctx.fillStyle = '#1e380e';
@@ -533,18 +587,16 @@
                 ctx.fillText(tree.id, pt.px, pt.py);
             });
 
-            // 7. Rośliny zielne (Kółka z numerami)
+            // Rośliny
             gardenData.plants.forEach(plant => {
                 const pt = toPx(plant.x, plant.y);
                 const rPx = (plant.r || 0.45) * scaleX;
 
-                // Cień
                 ctx.beginPath();
                 ctx.arc(pt.px + 3, pt.py + 3, rPx, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(0,0,0,0.2)';
                 ctx.fill();
 
-                // Ciało rośliny
                 ctx.beginPath();
                 ctx.arc(pt.px, pt.py, rPx, 0, Math.PI * 2);
                 ctx.fillStyle = plant.color;
@@ -553,7 +605,6 @@
                 ctx.lineWidth = 1;
                 ctx.stroke();
 
-                // Numer ID
                 ctx.fillStyle = isLightColor(plant.color) ? 'black' : 'white';
                 ctx.font = 'bold 11px sans-serif';
                 ctx.textAlign = 'center';
@@ -561,10 +612,7 @@
                 ctx.fillText(plant.id, pt.px, pt.py);
             });
 
-            // 8. Kompas i Skala
             drawCompassAndScale();
-
-            // Aktualizacja pola tekstu JSON
             document.getElementById('jsonTextArea').value = JSON.stringify(gardenData, null, 2);
         }
 
@@ -593,34 +641,32 @@
         }
 
         function drawCompassAndScale() {
-            // Kompas
-            const cx = canvas.width - 90;
-            const cy = 90;
+            const cx = canvas.width - 80;
+            const cy = 80;
             ctx.beginPath();
-            ctx.arc(cx, cy, 25, 0, Math.PI * 2);
+            ctx.arc(cx, cy, 22, 0, Math.PI * 2);
             ctx.fillStyle = 'rgba(255,255,255,0.85)';
             ctx.fill();
             ctx.stroke();
 
             ctx.fillStyle = '#8b0000';
-            ctx.font = 'bold 12px sans-serif';
+            ctx.font = 'bold 11px sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('N', cx, cy - 10);
+            ctx.fillText('N', cx, cy - 8);
             ctx.fillStyle = '#d97706';
-            ctx.fillText('S', cx, cy + 18);
+            ctx.fillText('S', cx, cy + 16);
 
-            // Skala
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.moveTo(margin, canvas.height - 25);
-            ctx.lineTo(margin + 5 * scaleX, canvas.height - 25);
+            ctx.moveTo(margin, canvas.height - 20);
+            ctx.lineTo(margin + 5 * scaleX, canvas.height - 20);
             ctx.stroke();
 
             ctx.fillStyle = 'black';
-            ctx.font = 'bold 12px sans-serif';
+            ctx.font = 'bold 11px sans-serif';
             ctx.textAlign = 'left';
-            ctx.fillText('Skala: 5 metrów', margin, canvas.height - 10);
+            ctx.fillText('Skala: 5m', margin, canvas.height - 8);
         }
 
         function isLightColor(color) {
@@ -628,55 +674,50 @@
             const r = parseInt(hex.substr(0, 2), 16);
             const g = parseInt(hex.substr(2, 2), 16);
             const b = parseInt(hex.substr(4, 2), 16);
-            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-            return brightness > 155;
+            return ((r * 299 + g * 587 + b * 114) / 1000) > 155;
         }
 
-        // --- MOUSE DRAG & DROP INTERACTION ---
-        canvas.addEventListener('mousedown', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mousePx = e.clientX - rect.left;
-            const mousePy = e.clientY - rect.top;
+        // UNIWERSALNA OBSŁUGA DOTYKU I MYSZY (POINTER EVENTS)
+        canvas.addEventListener('pointerdown', (e) => {
+            const coords = getCanvasCoordinates(e);
 
-            // Sprawdź rośliny
             for (let p of gardenData.plants) {
                 const pt = toPx(p.x, p.y);
-                const dist = Math.hypot(mousePx - pt.px, mousePy - pt.py);
-                if (dist <= (p.r || 0.45) * scaleX + 5) {
+                const dist = Math.hypot(coords.x - pt.px, coords.y - pt.py);
+                if (dist <= (p.r || 0.45) * scaleX + 10) { // powiększony margines kliknięcia dla palca
                     draggedItem = p;
+                    canvas.setPointerCapture(e.pointerId);
                     return;
                 }
             }
 
-            // Sprawdź drzewa
             for (let t of gardenData.trees) {
                 const pt = toPx(t.x, t.y);
-                const dist = Math.hypot(mousePx - pt.px, mousePy - pt.py);
+                const dist = Math.hypot(coords.x - pt.px, coords.y - pt.py);
                 if (dist <= t.r * scaleX) {
                     draggedItem = t;
+                    canvas.setPointerCapture(e.pointerId);
                     return;
                 }
             }
         });
 
-        canvas.addEventListener('mousemove', (e) => {
+        canvas.addEventListener('pointermove', (e) => {
             if (!draggedItem) return;
-            const rect = canvas.getBoundingClientRect();
-            const mousePx = e.clientX - rect.left;
-            const mousePy = e.clientY - rect.top;
-
-            const m = toMeters(mousePx, mousePy);
+            const coords = getCanvasCoordinates(e);
+            const m = toMeters(coords.x, coords.y);
             draggedItem.x = Math.round(m.x * 10) / 10;
             draggedItem.y = Math.round(m.y * 10) / 10;
-
             render();
         });
 
-        canvas.addEventListener('mouseup', () => {
-            draggedItem = null;
+        canvas.addEventListener('pointerup', (e) => {
+            if (draggedItem) {
+                draggedItem = null;
+                try { canvas.releasePointerCapture(e.pointerId); } catch(err){}
+            }
         });
 
-        // --- LEGENDA Y GENERATOR ---
         function updateLegendUI() {
             const legendDiv = document.getElementById('legendList');
             legendDiv.innerHTML = '';
@@ -706,16 +747,15 @@
                 const fontCol = isLightColor(p.color) ? 'black' : 'white';
                 item.innerHTML = `
                     <div class="badge" style="background-color: ${p.color}; color: ${fontCol}">${p.id}</div>
-                    <div style="flex:1;">
+                    <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
                         <b>${p.name}</b>
-                        <div style="font-size:0.75rem; color:#8fa88a;">${p.zone || 'Krzew / Drzewo'}</div>
+                        <div style="font-size:0.72rem; color:#8fa88a;">${p.zone || 'Krzew / Drzewo'}</div>
                     </div>
                 `;
                 legendDiv.appendChild(item);
             });
         }
 
-        // --- ZARZĄDZANIE DANYMI JSON I TABAMI ---
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -804,7 +844,6 @@
             switchTab('legend');
         }
 
-        // Inicjalizacja przy startcie
         render();
         updateLegendUI();
     </script>
