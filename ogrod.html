@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projektant Ogrodu Leczniczego - Topografia & JSON</title>
+    <style>
+        :root {
+            --bg-color: #1a2318;
+            --panel-bg: #243022;
+            --accent-color: #5c9c42;
+            --accent-hover: #72b05b;
+            --text-color: #e8f0e6;
+            --border-color: #384d35;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #121910;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            color: #92d075;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+        }
+
+        button, .btn-label {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        button:hover, .btn-label:hover {
+            background-color: var(--accent-hover);
+        }
+
+        button.secondary {
+            background-color: #3a4e37;
+        }
+
+        button.secondary:hover {
+            background-color: #4d6649;
+        }
+
+        button.danger {
+            background-color: #a83232;
+        }
+
+        button.danger:hover {
+            background-color: #c94242;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0f140e;
+            padding: 20px;
+            position: relative;
+            overflow: auto;
+        }
+
+        canvas {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border-radius: 8px;
+            cursor: crosshair;
+            background-color: #72b05b;
+        }
+
+        sidebar {
+            width: 420px;
+            background-color: var(--panel-bg);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: #192218;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #8fa88a;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: #a6e38c;
+            border-bottom: 2px solid #a6e38c;
+            background-color: var(--panel-bg);
+        }
+
+        .tab-content {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* JSON Area */
+        textarea {
+            width: 100%;
+            height: calc(100vh - 220px);
+            background-color: #141c13;
+            color: #a3e687;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            resize: none;
+        }
+
+        /* Controls Form */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            color: #b0c4ad;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: #192218;
+            color: white;
+            font-size: 0.85rem;
+        }
+
+        /* Legend List */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 8px;
+            border-bottom: 1px solid #2e3d2c;
+            font-size: 0.85rem;
+        }
+
+        .badge {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.75rem;
+            color: black;
+            border: 1px solid #000;
+        }
+
+        .info-box {
+            background-color: #192417;
+            border: 1px solid #3d5438;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            color: #c2d6bf;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌱 Projektant Ogrodu Leczniczego (JSON Viewer & Editor)</h1>
+        <div class="toolbar">
+            <button class="secondary" onclick="resetToDefault()">🔄 Domyślny Ogród</button>
+            <label class="btn-label secondary">
+                📂 Wczytaj JSON <input type="file" id="importJsonFile" accept=".json" onchange="importJSONFile(event)">
+            </label>
+            <button class="secondary" onclick="exportJSON()">💾 Pobierz JSON</button>
+            <button onclick="exportPNG()">📷 Pobierz PNG</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="canvas-container">
+            <canvas id="gardenCanvas" width="1100" height="800"></canvas>
+        </div>
+
+        <sidebar>
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('legend')">📋 Legenda Roślin</div>
+                <div class="tab" onclick="switchTab('add')">➕ Dodaj Roślinę</div>
+                <div class="tab" onclick="switchTab('json')">⚙️ Kod JSON</div>
+            </div>
+
+            <!-- TAB 1: LEGENDA -->
+            <div id="tab-legend" class="tab-content active">
+                <div class="info-box">
+                    💡 <b>Instrukcja:</b> Możesz bezpośrednio przesuwać rośliny i drzewa na mapie – wystarczy kliknąć obiekt myszką i go przeciągnąć.
+                </div>
+                <div id="legendList"></div>
+            </div>
+
+            <!-- TAB 2: DODAJ ROŚLINĘ -->
+            <div id="tab-add" class="tab-content">
+                <div class="form-group">
+                    <label>Numer ID rośliny:</label>
+                    <input type="number" id="plantId" value="26">
+                </div>
+                <div class="form-group">
+                    <label>Nazwa rośliny:</label>
+                    <input type="text" id="plantName" placeholder="np. Szałwia lekarska">
+                </div>
+                <div class="form-group">
+                    <label>Strefa ogrodu:</label>
+                    <select id="plantZone">
+                        <option value="Rabata 1">Rabata 1: Sucha i Słoneczna</option>
+                        <option value="Rabata 2">Rabata 2: Umiarkowanie Wilgotna</option>
+                        <option value="Rabata 3">Rabata 3: Wilgotna i Cienista</option>
+                        <option value="Zagłębienie Kwasowe">Zagłębienie Kwasowe</option>
+                        <option value="Dziki Zakątek">Dziki Zakątek</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Kolor znacznika:</label>
+                    <input type="color" id="plantColor" value="#22c55e">
+                </div>
+                <div class="form-group">
+                    <label>Współrzędna X (metry: 0 - 22):</label>
+                    <input type="number" id="plantX" value="10" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label>Współrzędna Y (metry: 0 - 16):</label>
+                    <input type="number" id="plantY" value="8" step="0.5">
+                </div>
+                <button style="width:100%; margin-top:10px;" onclick="addPlantFromForm()">➕ Dodaj do Ogrodu</button>
+            </div>
+
+            <!-- TAB 3: JSON EDITOR -->
+            <div id="tab-json" class="tab-content">
+                <div class="info-box">
+                    Edytuj strukturę JSON w czasie rzeczywistym. Kliknij "Zastosuj Zmiany", aby odświeżyć grafikę.
+                </div>
+                <textarea id="jsonTextArea"></textarea>
+                <button style="width:100%; margin-top:10px;" onclick="applyJsonFromTextarea()">✅ Zastosuj Zmiany z JSON</button>
+            </div>
+        </sidebar>
+    </main>
+
+    <script>
+        // DOMYŚLNA STRUKTURA DANYCH DLA OGRODU LECZNICZEGO
+        const defaultGardenData = {
+            "title": "TOPOGRAFICZNY PLAN OGRODU LECZNICZEGO",
+            "dimensions": { "width": 22, "height": 16 },
+            "zones": [
+                {
+                    "id": "z1",
+                    "name": "Strefa 1: Rabata Sucha (Kserofity)",
+                    "color": "#e3c18f",
+                    "border": "#a68350",
+                    "points": [[1.5, 2.0], [5.0, 1.5], [8.0, 3.5], [7.5, 6.8], [4.0, 7.5], [1.5, 5.0]]
+                },
+                {
+                    "id": "z2",
+                    "name": "Strefa 2: Rabata Ziołowa (Tradycyjna)",
+                    "color": "#93d16b",
+                    "border": "#548e2b",
+                    "points": [[8.5, 2.0], [14.0, 1.8], [15.5, 5.5], [13.5, 9.5], [8.5, 8.2], [7.2, 5.0]]
+                },
+                {
+                    "id": "z3",
+                    "name": "Strefa 3: Rabata Wilgotna i Cienista",
+                    "color": "#4f8f63",
+                    "border": "#255233",
+                    "points": [[2.0, 9.0], [6.5, 8.5], [7.5, 11.5], [6.0, 15.0], [2.2, 15.2], [1.2, 12.0]]
+                },
+                {
+                    "id": "z4",
+                    "name": "Strefa 4: Zagłębienie Kwasowe",
+                    "color": "#5c4533",
+                    "border": "#332418",
+                    "points": [[14.5, 10.5], [19.5, 10.0], [21.0, 13.5], [18.0, 15.5], [14.5, 14.0]]
+                },
+                {
+                    "id": "z6",
+                    "name": "Strefa 6: Dziki Zakątek",
+                    "color": "#829e50",
+                    "border": "#435424",
+                    "points": [[18.0, 1.2], [21.5, 1.2], [21.5, 5.5], [17.5, 3.8]]
+                }
+            ],
+            "paths": [
+                {
+                    "points": [[11.5, 0.0], [9.5, 2.5], [7.8, 6.8], [8.0, 8.5], [10.0, 10.2], [13.5, 10.0], [14.2, 7.0], [11.0, 4.2]],
+                    "width": 1.2,
+                    "color": "#d8c3a5"
+                }
+            ],
+            "trees": [
+                { "id": 23, "name": "Jarząb pospolity", "x": 2.2, "y": 14.5, "r": 1.8, "color": "#2d591b" },
+                { "id": 20, "name": "Dziki bez czarny", "x": 0.8, "y": 11.5, "r": 1.5, "color": "#3a6b25" },
+                { "id": 21, "name": "Głóg", "x": 4.8, "y": 15.2, "r": 1.4, "color": "#487d2f" },
+                { "id": 22, "name": "Jałowiec pospolity", "x": 1.2, "y": 4.2, "r": 1.1, "color": "#1b4a25" },
+                { "id": 20, "name": "Dziki bez czarny", "x": 20.5, "y": 14.8, "r": 1.4, "color": "#3a6b25" }
+            ],
+            "plants": [
+                { "id": 1, "name": "Kocanka piaskowa", "zone": "Rabata 1", "color": "#f0ca24", "x": 2.8, "y": 2.8, "r": 0.45 },
+                { "id": 2, "name": "Macierzanka piaskowa", "zone": "Rabata 1", "color": "#d1528a", "x": 4.2, "y": 2.2, "r": 0.45 },
+                { "id": 3, "name": "Krwawnik pospolity", "zone": "Rabata 1", "color": "#f0f0f0", "x": 6.2, "y": 2.8, "r": 0.45 },
+                { "id": 4, "name": "Chaber bławatek", "zone": "Rabata 1", "color": "#2b7fff", "x": 3.8, "y": 4.5, "r": 0.45 },
+                { "id": 1, "name": "Kocanka piaskowa", "zone": "Rabata 1", "color": "#f0ca24", "x": 6.0, "y": 5.2, "r": 0.45 },
+                { "id": 2, "name": "Macierzanka piaskowa", "zone": "Rabata 1", "color": "#d1528a", "x": 2.5, "y": 5.8, "r": 0.45 },
+                { "id": 5, "name": "Jeżówka purpurowa", "zone": "Rabata 2", "color": "#ab2b8c", "x": 9.5, "y": 3.2, "r": 0.45 },
+                { "id": 6, "name": "Melisa lekarska", "zone": "Rabata 2", "color": "#66bb66", "x": 11.2, "y": 2.8, "r": 0.45 },
+                { "id": 7, "name": "Lubczyk ogrodowy", "zone": "Rabata 2", "color": "#2b8a5b", "x": 13.5, "y": 3.2, "r": 0.55 },
+                { "id": 8, "name": "Nagietek lekarski", "zone": "Rabata 2", "color": "#ff941a", "x": 9.0, "y": 5.2, "r": 0.45 },
+                { "id": 9, "name": "Malwa różowa", "zone": "Rabata 2", "color": "#e64563", "x": 14.2, "y": 6.8, "r": 0.50 },
+                { "id": 10, "name": "Fiołek trójbarwny", "zone": "Rabata 2", "color": "#8a3ffc", "x": 11.0, "y": 5.5, "r": 0.40 },
+                { "id": 11, "name": "Wrotycz pospolity", "zone": "Rabata 2", "color": "#eab308", "x": 9.2, "y": 7.0, "r": 0.45 },
+                { "id": 5, "name": "Jeżówka purpurowa", "zone": "Rabata 2", "color": "#ab2b8c", "x": 12.5, "y": 7.5, "r": 0.45 },
+                { "id": 12, "name": "Kozłek lekarski", "zone": "Rabata 3", "color": "#fce7f3", "x": 3.2, "y": 9.8, "r": 0.50 },
+                { "id": 13, "name": "Żywokost lekarski", "zone": "Rabata 3", "color": "#6b21a8", "x": 5.2, "y": 9.8, "r": 0.50 },
+                { "id": 14, "name": "Przywrotnik pospolity", "zone": "Rabata 3", "color": "#a3e635", "x": 2.8, "y": 12.2, "r": 0.50 },
+                { "id": 15, "name": "Mięta pieprzowa", "zone": "Rabata 3", "color": "#0d9488", "x": 5.5, "y": 12.5, "r": 0.45 },
+                { "id": 16, "name": "Prawoślaz lekarski", "zone": "Rabata 3", "color": "#fda4af", "x": 3.8, "y": 13.8, "r": 0.50 },
+                { "id": 17, "name": "Borówka czernica", "zone": "Zagłębienie Kwasowe", "color": "#1e3a8a", "x": 16.5, "y": 11.5, "r": 0.45 },
+                { "id": 18, "name": "Borówka brusznica", "zone": "Zagłębienie Kwasowe", "color": "#dc2626", "x": 18.8, "y": 11.8, "r": 0.45 },
+                { "id": 19, "name": "Skrzyp polny", "zone": "Zagłębienie Kwasowe", "color": "#34d399", "x": 17.2, "y": 14.2, "r": 0.45 },
+                { "id": 17, "name": "Borówka czernica", "zone": "Zagłębienie Kwasowe", "color": "#1e3a8a", "x": 19.5, "y": 14.0, "r": 0.45 },
+                { "id": 24, "name": "Malina właściwa", "zone": "Obwódka", "color": "#437328", "x": 15.0, "y": 0.6, "r": 0.40 },
+                { "id": 24, "name": "Malina właściwa", "zone": "Obwódka", "color": "#437328", "x": 16.0, "y": 0.6, "r": 0.40 },
+                { "id": 24, "name": "Malina właściwa", "zone": "Obwódka", "color": "#437328", "x": 17.0, "y": 0.6, "r": 0.40 },
+                { "id": 24, "name": "Malina właściwa", "zone": "Obwódka", "color": "#437328", "x": 18.0, "y": 0.6, "r": 0.40 },
+                { "id": 24, "name": "Malina właściwa", "zone": "Obwódka", "color": "#437328", "x": 19.0, "y": 0.6, "r": 0.40 },
+                { "id": 24, "name": "Malina właściwa", "zone": "Obwódka", "color": "#437328", "x": 20.0, "y": 0.6, "r": 0.40 },
+                { "id": 24, "name": "Malina właściwa", "zone": "Obwódka", "color": "#437328", "x": 21.0, "y": 0.6, "r": 0.40 },
+                { "id": 25, "name": "Pokrzywa zwyczajna", "zone": "Dziki Zakątek", "color": "#3f6212", "x": 19.2, "y": 2.5, "r": 0.50 },
+                { "id": 25, "name": "Pokrzywa zwyczajna", "zone": "Dziki Zakątek", "color": "#3f6212", "x": 20.5, "y": 3.8, "r": 0.50 }
+            ],
+            "decorations": [
+                { "type": "bench", "name": "Ławka", "x": 12.5, "y": 9.1 },
+                { "type": "water", "name": "Poidełko", "x": 6.8, "y": 11.8 }
+            ]
+        };
+
+        let gardenData = JSON.parse(JSON.stringify(defaultGardenData));
+        const canvas = document.getElementById('gardenCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Map dimensions and scale
+        const margin = 60;
+        let scaleX = (canvas.width - 2 * margin) / gardenData.dimensions.width;
+        let scaleY = (canvas.height - 2 * margin) / gardenData.dimensions.height;
+
+        let draggedItem = null;
+
+        function toPx(x, y) {
+            return {
+                px: margin + x * scaleX,
+                py: canvas.height - margin - y * scaleY // Invert Y axis for topographical standard
+            };
+        }
+
+        function toMeters(px, py) {
+            return {
+                x: (px - margin) / scaleX,
+                y: (canvas.height - margin - py) / scaleY
+            };
+        }
+
+        // --- RENDEROWANIE OGRODU ---
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Tło trawnika
+            ctx.fillStyle = '#72b05b';
+            ctx.fillRect(margin, margin, canvas.width - 2*margin, canvas.height - 2*margin);
+            ctx.strokeStyle = '#2b401d';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(margin, margin, canvas.width - 2*margin, canvas.height - 2*margin);
+
+            // 2. Linie Poziomicowe (Topografia)
+            drawContourLines();
+
+            // 3. Strefy ogrodu (Poligony)
+            gardenData.zones.forEach(zone => {
+                if (zone.points.length < 3) return;
+                ctx.beginPath();
+                const start = toPx(zone.points[0][0], zone.points[0][1]);
+                ctx.moveTo(start.px, start.py);
+                for (let i = 1; i < zone.points.length; i++) {
+                    const pt = toPx(zone.points[i][0], zone.points[i][1]);
+                    ctx.lineTo(pt.px, pt.py);
+                }
+                ctx.closePath();
+                ctx.fillStyle = zone.color;
+                ctx.globalAlpha = 0.85;
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+                ctx.strokeStyle = zone.border;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+
+            // 4. Ścieżki żwirowe
+            gardenData.paths.forEach(path => {
+                if (path.points.length < 2) return;
+                ctx.beginPath();
+                const start = toPx(path.points[0][0], path.points[0][1]);
+                ctx.moveTo(start.px, start.py);
+                for (let i = 1; i < path.points.length; i++) {
+                    const pt = toPx(path.points[i][0], path.points[i][1]);
+                    ctx.lineTo(pt.px, pt.py);
+                }
+                ctx.strokeStyle = path.color;
+                ctx.lineWidth = path.width * scaleX;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+            });
+
+            // 5. Elementy Dekoracyjne (Ławka, Poidełko)
+            gardenData.decorations.forEach(dec => {
+                const pt = toPx(dec.x, dec.y);
+                if (dec.type === 'bench') {
+                    ctx.fillStyle = '#7a4b2a';
+                    ctx.fillRect(pt.px - 20, pt.py - 8, 40, 16);
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 10px sans-serif';
+                    ctx.fillText('Ławka', pt.px - 15, pt.py + 3);
+                } else if (dec.type === 'water') {
+                    ctx.beginPath();
+                    ctx.arc(pt.px, pt.py, 12, 0, Math.PI * 2);
+                    ctx.fillStyle = '#4cc9f0';
+                    ctx.fill();
+                    ctx.strokeStyle = '#0077b6';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            });
+
+            // 6. Drzewa i Krzewy (Cienie i Korony)
+            gardenData.trees.forEach(tree => {
+                const pt = toPx(tree.x, tree.y);
+                const rPx = tree.r * scaleX;
+
+                // Cień
+                ctx.beginPath();
+                ctx.arc(pt.px + 8, pt.py + 8, rPx, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                ctx.fill();
+
+                // Korona
+                ctx.beginPath();
+                ctx.arc(pt.px, pt.py, rPx, 0, Math.PI * 2);
+                ctx.fillStyle = tree.color;
+                ctx.fill();
+                ctx.strokeStyle = '#172e0a';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Identyfikator
+                ctx.beginPath();
+                ctx.arc(pt.px, pt.py, 12, 0, Math.PI * 2);
+                ctx.fillStyle = '#1e380e';
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(tree.id, pt.px, pt.py);
+            });
+
+            // 7. Rośliny zielne (Kółka z numerami)
+            gardenData.plants.forEach(plant => {
+                const pt = toPx(plant.x, plant.y);
+                const rPx = (plant.r || 0.45) * scaleX;
+
+                // Cień
+                ctx.beginPath();
+                ctx.arc(pt.px + 3, pt.py + 3, rPx, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                ctx.fill();
+
+                // Ciało rośliny
+                ctx.beginPath();
+                ctx.arc(pt.px, pt.py, rPx, 0, Math.PI * 2);
+                ctx.fillStyle = plant.color;
+                ctx.fill();
+                ctx.strokeStyle = '#1a1a1a';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Numer ID
+                ctx.fillStyle = isLightColor(plant.color) ? 'black' : 'white';
+                ctx.font = 'bold 11px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(plant.id, pt.px, pt.py);
+            });
+
+            // 8. Kompas i Skala
+            drawCompassAndScale();
+
+            // Aktualizacja pola tekstu JSON
+            document.getElementById('jsonTextArea').value = JSON.stringify(gardenData, null, 2);
+        }
+
+        function drawContourLines() {
+            ctx.strokeStyle = '#385e2b';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.globalAlpha = 0.35;
+
+            for (let r = 2; r <= 8; r += 2) {
+                const mound = toPx(4.5, 4.5);
+                ctx.beginPath();
+                ctx.arc(mound.px, mound.py, r * scaleX, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            for (let r = 1.5; r <= 5; r += 1.5) {
+                const pit = toPx(17.5, 12.5);
+                ctx.beginPath();
+                ctx.arc(pit.px, pit.py, r * scaleX, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            ctx.setLineDash([]);
+            ctx.globalAlpha = 1.0;
+        }
+
+        function drawCompassAndScale() {
+            // Kompas
+            const cx = canvas.width - 90;
+            const cy = 90;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 25, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,255,255,0.85)';
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#8b0000';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('N', cx, cy - 10);
+            ctx.fillStyle = '#d97706';
+            ctx.fillText('S', cx, cy + 18);
+
+            // Skala
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(margin, canvas.height - 25);
+            ctx.lineTo(margin + 5 * scaleX, canvas.height - 25);
+            ctx.stroke();
+
+            ctx.fillStyle = 'black';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('Skala: 5 metrów', margin, canvas.height - 10);
+        }
+
+        function isLightColor(color) {
+            const hex = color.replace('#', '');
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            return brightness > 155;
+        }
+
+        // --- MOUSE DRAG & DROP INTERACTION ---
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mousePx = e.clientX - rect.left;
+            const mousePy = e.clientY - rect.top;
+
+            // Sprawdź rośliny
+            for (let p of gardenData.plants) {
+                const pt = toPx(p.x, p.y);
+                const dist = Math.hypot(mousePx - pt.px, mousePy - pt.py);
+                if (dist <= (p.r || 0.45) * scaleX + 5) {
+                    draggedItem = p;
+                    return;
+                }
+            }
+
+            // Sprawdź drzewa
+            for (let t of gardenData.trees) {
+                const pt = toPx(t.x, t.y);
+                const dist = Math.hypot(mousePx - pt.px, mousePy - pt.py);
+                if (dist <= t.r * scaleX) {
+                    draggedItem = t;
+                    return;
+                }
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!draggedItem) return;
+            const rect = canvas.getBoundingClientRect();
+            const mousePx = e.clientX - rect.left;
+            const mousePy = e.clientY - rect.top;
+
+            const m = toMeters(mousePx, mousePy);
+            draggedItem.x = Math.round(m.x * 10) / 10;
+            draggedItem.y = Math.round(m.y * 10) / 10;
+
+            render();
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            draggedItem = null;
+        });
+
+        // --- LEGENDA Y GENERATOR ---
+        function updateLegendUI() {
+            const legendDiv = document.getElementById('legendList');
+            legendDiv.innerHTML = '';
+
+            const uniquePlants = [];
+            const seenIds = new Set();
+
+            gardenData.plants.forEach(p => {
+                if (!seenIds.has(p.id)) {
+                    seenIds.add(p.id);
+                    uniquePlants.push(p);
+                }
+            });
+
+            gardenData.trees.forEach(t => {
+                if (!seenIds.has(t.id)) {
+                    seenIds.add(t.id);
+                    uniquePlants.push(t);
+                }
+            });
+
+            uniquePlants.sort((a, b) => a.id - b.id);
+
+            uniquePlants.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                const fontCol = isLightColor(p.color) ? 'black' : 'white';
+                item.innerHTML = `
+                    <div class="badge" style="background-color: ${p.color}; color: ${fontCol}">${p.id}</div>
+                    <div style="flex:1;">
+                        <b>${p.name}</b>
+                        <div style="font-size:0.75rem; color:#8fa88a;">${p.zone || 'Krzew / Drzewo'}</div>
+                    </div>
+                `;
+                legendDiv.appendChild(item);
+            });
+        }
+
+        // --- ZARZĄDZANIE DANYMI JSON I TABAMI ---
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            if (tabName === 'legend') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('tab-legend').classList.add('active');
+            } else if (tabName === 'add') {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('tab-add').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[2].classList.add('active');
+                document.getElementById('tab-json').classList.add('active');
+            }
+        }
+
+        function applyJsonFromTextarea() {
+            try {
+                const parsed = JSON.parse(document.getElementById('jsonTextArea').value);
+                gardenData = parsed;
+                render();
+                updateLegendUI();
+                alert('✅ Pomyślnie zaktualizowano ogród z kodu JSON!');
+            } catch (err) {
+                alert('❌ Błąd w strukturze JSON:\n' + err.message);
+            }
+        }
+
+        function resetToDefault() {
+            gardenData = JSON.parse(JSON.stringify(defaultGardenData));
+            render();
+            updateLegendUI();
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(gardenData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "ogrod_leczniczy.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importJSONFile(event) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    gardenData = JSON.parse(e.target.result);
+                    render();
+                    updateLegendUI();
+                } catch (err) {
+                    alert('Błąd podczas odczytu pliku JSON: ' + err.message);
+                }
+            };
+            reader.readAsText(event.target.files[0]);
+        }
+
+        function exportPNG() {
+            const link = document.createElement('a');
+            link.download = 'ogrod_leczniczy_wizualizacja.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function addPlantFromForm() {
+            const id = parseInt(document.getElementById('plantId').value);
+            const name = document.getElementById('plantName').value || 'Nowa Roślina';
+            const zone = document.getElementById('plantZone').value;
+            const color = document.getElementById('plantColor').value;
+            const x = parseFloat(document.getElementById('plantX').value);
+            const y = parseFloat(document.getElementById('plantY').value);
+
+            gardenData.plants.push({
+                id: id,
+                name: name,
+                zone: zone,
+                color: color,
+                x: x,
+                y: y,
+                r: 0.45
+            });
+
+            render();
+            updateLegendUI();
+            switchTab('legend');
+        }
+
+        // Inicjalizacja przy startcie
+        render();
+        updateLegendUI();
+    </script>
+</body>
+</html>
