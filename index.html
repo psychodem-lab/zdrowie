@@ -1,574 +1,974 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="cbt.png" />
-    <title>Szlachetne Zdrowie</title>
-    <style>
-        :root {
-            /* Paleta kolorów - Clinical Clean */
-            --primary: #0081a7; 
-            --primary-dark: #005f73;
-            --accent: #00afb9;
-            --bg: #fdfcdc;
-            --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #eef2f3 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --text-main: #2b2d42;
-            --text-muted: #8d99ae;
-            --success: #38b000;
-            --warning: #ffaa00;
-            --danger: #d00000;
-            
-            --radius: 16px;
-            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            --border: 1px solid rgba(0,0,0,0.05);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zdrowie: ciało i umysł</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9eee9;
+  --surface:#f4f6f2;
+  --ink:#2c3733;
+  --muted:#5d6b65;
+  --line:#d3dbd3;
+  --accent:#44766a;
+  --accent-hover:#355e54;
+  --on-accent:#ffffff;
+  --soft:#dde7e1;
+  --l0:#2e6f47;
+  --l1:#7a6a1c;
+  --l2:#a35422;
+  --l3:#a1322a;
+  --ln:#44766a;
+  --card-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#141a18;
+    --surface:#1c2421;
+    --ink:#dde5e0;
+    --muted:#9aa8a1;
+    --line:#2c3733;
+    --accent:#7fb3a4;
+    --accent-hover:#9ec4b9;
+    --on-accent:#0f1a17;
+    --soft:#26322d;
+    --l0:#86c09a;
+    --l1:#cdbb6a;
+    --l2:#e0a070;
+    --l3:#e08a82;
+    --ln:#7fb3a4;
+    --card-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-main);
-            line-height: 1.5;
-            padding: 40px 20px;
-            min-height: 100vh;
-        }
+:root[data-theme="dark"]{
+  --bg:#141a18;
+  --surface:#1c2421;
+  --ink:#dde5e0;
+  --muted:#9aa8a1;
+  --line:#2c3733;
+  --accent:#7fb3a4;
+  --accent-hover:#9ec4b9;
+  --on-accent:#0f1a17;
+  --soft:#26322d;
+  --l0:#86c09a;
+  --l1:#cdbb6a;
+  --l2:#e0a070;
+  --l3:#e08a82;
+  --ln:#7fb3a4;
+  --card-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 90px);scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:400 1rem/1.6 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;padding:0 16px 40px;min-height:100vh}
+.wrap{max-width:1040px;margin:0 auto}
 
-        /* Logo */
-        .logo-wrapper {
-            text-align: center;
-            padding-bottom: 20px;
-        }
-        .logo-wrapper img {
-            max-height: 100px; 
-            width: auto;
-            border: 0;
-        }
+/* Nagłówek i nawigacja */
+header{padding:28px 0 16px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+h1{font-size:clamp(1.6rem,4vw,2.2rem);line-height:1.2;font-weight:700;color:var(--ink)}
+header p{color:var(--muted);max-width:56ch;margin-top:6px;font-size:0.96rem}
+.theme-btn{width:auto;margin:0;padding:10px 16px;font-size:0.9rem;background:var(--soft);color:var(--ink);border:1px solid var(--line);border-radius:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.theme-btn:hover{background:var(--line)}
 
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);padding:8px 0 16px}
+nav .seg{display:flex;gap:6px;background:var(--soft);padding:5px;border-radius:16px;border:1px solid var(--line)}
+nav button{flex:1;margin:0;background:transparent;color:var(--muted);padding:12px 10px;border-radius:12px;font-weight:700;border:0;cursor:pointer;min-height:44px;transition:all 0.2s ease}
+nav button[aria-selected=true]{background:var(--surface);color:var(--accent);box-shadow:0 2px 6px rgba(0,0,0,0.08)}
 
-        header h1 {
-            font-weight: 800;
-            font-size: 3rem;
-            background: -webkit-linear-gradient(var(--primary-dark), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
+/* Elementy interfejsu */
+button.btn-main{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 20px;cursor:pointer;background:var(--accent);color:var(--on-accent);width:100%;margin-top:8px;min-height:46px;transition:background 0.2s}
+button.btn-main:hover{background:var(--accent-hover)}
+button.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--line);border-radius:12px;font-weight:700;padding:11px 18px;cursor:pointer;width:100%;margin-top:8px;min-height:46px}
+button.ghost:hover{background:var(--soft);border-color:var(--accent)}
 
-        header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
+button:focus-visible,input:focus-visible,select:focus-visible,#tap:focus-visible,.pill:has(input:focus-visible){outline:3px solid var(--accent);outline-offset:2px}
+section[hidden]{display:none !important}
 
-        /* Grid System */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
+/* Siatki i karty */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--card-shadow)}
+.card.wide{grid-column:1/-1}
+h2{font-size:1.25rem;font-weight:700;line-height:1.3}
+h3{font-size:1.05rem;font-weight:700}
+.hint{color:var(--muted);font-size:0.9rem}
 
-        /* Cards */
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            border: var(--border);
-            backdrop-filter: blur(10px);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            display: flex;
-            flex-direction: column;
-        }
+/* Formularze */
+.row{display:flex;gap:12px;align-items:center}.row>*{flex:1;min-width:0}
+label.f{display:block;font-size:0.88rem;color:var(--muted);margin-bottom:6px;font-weight:700}
+input[type=number],select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;min-height:44px}
+input[type=number]:focus,select:focus{border-color:var(--accent)}
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1);
-        }
+/* Wyniki */
+.res{border-radius:14px;background:var(--soft);padding:14px 16px;border-left:6px solid var(--ln);margin-top:6px}
+.res b{display:block;font-size:1.55rem;line-height:1.2;font-weight:700}
+.res span{color:var(--muted);font-size:0.92rem;display:block;margin-top:4px}
+.lv0{border-color:var(--l0)}.lv0 b{color:var(--l0)}
+.lv1{border-color:var(--l1)}.lv1 b{color:var(--l1)}
+.lv2{border-color:var(--l2)}.lv2 b{color:var(--l2)}
+.lv3{border-color:var(--l3)}.lv3 b{color:var(--l3)}
 
-        .card-header {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 15px;
-        }
+/* Pulsometr */
+#tap{height:110px;border:2px dashed var(--line);border-radius:16px;display:grid;place-items:center;text-align:center;padding:12px;cursor:pointer;user-select:none;color:var(--muted);background:var(--bg);position:relative;overflow:hidden;transition:all 0.15s ease}
+#tap:active,#tap.pulsing{border-color:var(--accent);background:var(--soft);transform:scale(0.99)}
+#tap .pulse-icon{font-size:2rem;margin-bottom:4px;transition:transform 0.1s ease}
+#tap.pulsing .pulse-icon{transform:scale(1.3)}
 
-        .card h2 {
-            font-size: 1.2rem;
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.big{font-size:2.2rem;text-align:center;font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent)}
 
-        .card-icon {
-            font-size: 1.4rem;
-        }
+/* Testy psychologiczne */
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.chip{margin:0;text-align:left;background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:400;cursor:pointer;min-height:54px;transition:all 0.2s ease}
+.chip b{display:block;font-size:1rem;color:var(--ink)}
+.chip small{color:var(--muted);font-size:0.82rem}
+.chip[aria-pressed=true]{background:var(--soft);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.chip[aria-pressed=true] b{color:var(--accent)}
 
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 15px;
-        }
+.bar{height:10px;background:var(--soft);border-radius:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width 0.3s ease}
 
-        .form-row {
-            display: flex;
-            gap: 10px;
-        }
+.q{background:var(--bg);border-radius:14px;padding:16px;display:grid;gap:12px;border:1px solid var(--line)}
+.q.miss{border:2px solid var(--l2);background:rgba(163, 84, 34, 0.05)}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.pill{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;font-size:0.95rem;min-height:46px;transition:all 0.15s ease}
+.pill input{accent-color:var(--accent);width:20px;height:20px;flex-shrink:0}
+.pill:has(input:checked){border-color:var(--accent);background:var(--soft);font-weight:700;color:var(--accent)}
 
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+.note{border-left:6px solid var(--l2);background:var(--soft);border-radius:14px;padding:14px 16px;font-size:0.94rem;line-height:1.5}
+.help{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:10px}
+.help div{background:var(--bg);border-radius:14px;padding:16px;border:1px solid var(--line)}
+.help a{font-size:1.25rem;font-weight:700;color:var(--accent);text-decoration:none;display:inline-block;margin:4px 0}
+.help a:hover{text-decoration:underline}
 
-        input, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            background: #fafafa;
-            transition: all 0.2s;
-        }
+.sum{display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.sum:first-of-type{border-top:0}
+.sum em{font-style:normal;font-weight:700;font-size:1.02rem}
+.sum small{display:block;color:var(--muted);font-size:0.86rem;margin-top:2px}
+a{color:var(--accent);text-decoration:underline}
+footer{margin-top:40px;color:var(--muted);font-size:0.88rem;text-align:center;line-height:1.5}
 
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(0, 129, 167, 0.1);
-        }
+/* Druk i Raport PDF */
+.print-header{display:none}
+@media print{
+  body{background:#fff !important;color:#000 !important;padding:0 !important;font-size:11pt}
+  .wrap{max-width:100% !important;margin:0 !important}
+  header,nav,.chips,.theme-btn,button,.no-print{display:none !important}
+  section[hidden]{display:block !important}
+  #p-body,#p-mind,#help,#pulse,#ruf-controls{display:none !important}
+  #p-sum{display:block !important}
+  .card{border:1px solid #ccc !important;box-shadow:none !important;background:#fff !important;padding:15px !important;border-radius:8px !important}
+  .res{border-left:4px solid #333 !important;background:#f9f9f9 !important;color:#000 !important}
+  .res b{color:#000 !important}
+  .print-header{display:block;margin-bottom:20px;border-b:2px solid #000;padding-bottom:10px}
+  .print-header h1{font-size:18pt;color:#000}
+  .sum{border-bottom:1px solid #eee;padding:8px 0}
+  .sum .lv0{color:#2e6f47 !important}.sum .lv1{color:#7a6a1c !important}.sum .lv2{color:#a35422 !important}.sum .lv3{color:#a1322a !important}
+}
 
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: auto;
-        }
-
-        button:hover {
-            background-color: var(--primary-dark);
-        }
-
-        button.outline {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            margin-top: 10px;
-        }
-
-        button.outline:hover {
-            background: rgba(0, 129, 167, 0.05);
-        }
-
-        /* Results Area */
-        .result-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8fdff;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent);
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1.2;
-        }
-
-        .result-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-
-        /* Specyficzne dla Pulsometru */
-        #tap-area {
-            height: 100px;
-            border: 2px dashed #cbd5e1;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            user-select: none;
-            margin-bottom: 15px;
-            background: #f8fafc;
-            color: var(--text-muted);
-            transition: all 0.1s;
-            text-align: center;
-            padding: 10px;
-        }
-        #tap-area:active {
-            background: #e2e8f0;
-            border-color: var(--primary);
-            transform: scale(0.98);
-        }
-
-        /* Specyficzne dla Ruffiera */
-        .timer-display {
-            font-family: monospace;
-            font-size: 2rem;
-            text-align: center;
-            margin: 10px 0;
-            color: var(--primary-dark);
-        }
-
-        /* Sekcja końcowa z przyciskiem */
-        .action-section {
-            margin-top: 50px;
-            text-align: center;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 18px 36px;
-            background-color: var(--accent);
-            color: white;
-            text-decoration: none;
-            border-radius: var(--radius);
-            font-weight: 700;
-            font-size: 1.1rem;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 175, 185, 0.3);
-        }
-        
-        /* Footer */
-        footer {
-            margin-top: 60px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            border-top: 1px solid rgba(0,0,0,0.05);
-            padding-top: 30px;
-        }
-    </style>
+@media (max-width:560px){
+  header{flex-direction:column}
+  .theme-btn{align-self:flex-start}
+}
+</style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="container">
-    <div class="logo-wrapper">
-        <a href="https://psychodem-lab.github.io/o/narzedzia.html">
-            <img src="logo.png" alt="Logo Psychodem">
-        </a>
+<!-- NAGŁÓWEK RAPORTU DRUKU -->
+<div class="print-header">
+  <h1>Zdrowie: ciało i umysł – Raport Podsumowujący</h1>
+  <p>Wygenerowano z aplikacji samooceny zdrowia | Data: <span id="print-date"></span></p>
+</div>
+
+<!-- NAGŁÓWEK DLA PRZEGLĄDARKI -->
+<header class="no-print">
+  <div>
+    <h1>Zdrowie: ciało i umysł</h1>
+    <p>Kalkulatory zdrowia fizycznego oraz standaryzowane testy przesiewowe w jednym miejscu. Wszystkie dane pozostają wyłącznie w Twojej przeglądarce.</p>
+  </div>
+  <button class="theme-btn" id="theme" type="button" aria-label="Zmień motyw">
+    <span>🌓 Motyw</span>
+  </button>
+</header>
+
+<!-- NAWIGACJA ZAKŁADEK -->
+<nav aria-label="Główne sekcje" class="no-print">
+  <div class="seg" role="tablist">
+    <button role="tab" id="t-body" aria-selected="true" aria-controls="p-body" type="button">Ciało</button>
+    <button role="tab" id="t-mind" aria-selected="false" aria-controls="p-mind" type="button">Umysł</button>
+    <button role="tab" id="t-sum" aria-selected="false" aria-controls="p-sum" type="button">Podsumowanie</button>
+  </div>
+</nav>
+
+<!-- SEKCJA 1: CIAŁO -->
+<section id="p-body" role="tabpanel" aria-labelledby="t-body">
+  <div class="grid" id="calcs"></div>
+  <div class="grid" style="margin-top:20px">
+    <!-- Pulsometr -->
+    <div class="card" id="pulse">
+      <h2>Pulsometr dotykowy</h2>
+      <p class="hint">Wyczuj tętno na szyi lub nadgarstku i stukaj w przycisk w jego rytm.</p>
+      <div id="tap" role="button" tabindex="0" aria-label="Przycisk pulsometru. Stukaj w rytm serca.">
+        <div class="pulse-icon">❤️</div>
+        <div>Stukaj tutaj w rytm tętna</div>
+      </div>
+      <div class="res" id="bpm" aria-live="polite"><b>-- BPM</b><span>Potrzeba co najmniej dwóch stuknięć.</span></div>
+      <button class="ghost" id="pulse-reset" type="button">Wyzeruj pomiar</button>
     </div>
+    <!-- Test Ruffiera -->
+    <div class="card wide" id="ruffier"></div>
+  </div>
+  <p style="margin-top:20px" class="no-print"><a href="https://psychodem-lab.github.io/zdrowie/trening.html" target="_blank" rel="noopener">Sprawdź rekomendowaną serię ćwiczeń na zdrowy kręgosłup &rarr;</a></p>
+</section>
 
-    <header>
-        <h1>Szlachetne Zdrowie</h1>
-        <p>Precyzyjne algorytmy. Czyste dane. Zero domysłów.</p>
-    </header>
-
-    <div class="grid">
-        
-        <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">⚖️</span> BMI</h2>
-            </div>
-            <div class="form-group">
-                <label>Waga (kg)</label>
-                <input type="number" id="bmi-weight" placeholder="np. 75">
-            </div>
-            <div class="form-group">
-                <label>Wzrost (cm)</label>
-                <input type="number" id="bmi-height" placeholder="np. 180">
-            </div>
-            <button onclick="calcBMI()">Oblicz BMI</button>
-            <div id="res-bmi" class="result-box"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">📏</span> WHR (Talia/Biodra)</h2>
-            </div>
-            <div class="form-group">
-                <label>Płeć</label>
-                <select id="whr-gender">
-                    <option value="m">Mężczyzna</option>
-                    <option value="k">Kobieta</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Obwód talii (cm)</label>
-                <input type="number" id="whr-waist" placeholder="W najwęższym miejscu">
-            </div>
-            <div class="form-group">
-                <label>Obwód bioder (cm)</label>
-                <input type="number" id="whr-hip" placeholder="W najszerszym miejscu">
-            </div>
-            <button onclick="calcWHR()">Analizuj sylwetkę</button>
-            <div id="res-whr" class="result-box"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">🧍</span> WHtR (Talia/Wzrost)</h2>
-            </div>
-            <div class="form-group">
-                <label>Obwód talii (cm)</label>
-                <input type="number" id="whtr-waist" placeholder="np. 80">
-            </div>
-            <div class="form-group">
-                <label>Wzrost (cm)</label>
-                <input type="number" id="whtr-height" placeholder="np. 180">
-            </div>
-            <button onclick="calcWHtR()">Sprawdź ryzyko metaboliczne</button>
-            <div id="res-whtr" class="result-box"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">🔥</span> BMR (Mifflin)</h2>
-            </div>
-            <div class="form-row">
-                <div class="form-group" style="flex:1">
-                    <label>Płeć</label>
-                    <select id="bmr-gender">
-                        <option value="m">M</option>
-                        <option value="k">K</option>
-                    </select>
-                </div>
-                <div class="form-group" style="flex:1">
-                    <label>Wiek</label>
-                    <input type="number" id="bmr-age" placeholder="Lat">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group" style="flex:1">
-                    <label>Waga (kg)</label>
-                    <input type="number" id="bmr-weight">
-                </div>
-                <div class="form-group" style="flex:1">
-                    <label>Wzrost (cm)</label>
-                    <input type="number" id="bmr-height">
-                </div>
-            </div>
-            <button onclick="calcBMR()">Oblicz zapotrzebowanie</button>
-            <div id="res-bmr" class="result-box"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">💧</span> Woda</h2>
-            </div>
-            <div class="form-group">
-                <label>Waga (kg)</label>
-                <input type="number" id="water-weight">
-            </div>
-            <div class="form-group">
-                <label>Aktywność (min)</label>
-                <input type="number" id="water-active" value="0">
-            </div>
-            <button onclick="calcWater()">Oblicz</button>
-            <div id="res-water" class="result-box"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h2><span class="card-icon">❤️</span> Pulsometr (Tap)</h2>
-            </div>
-            <div id="tap-area" onclick="handleTap()">
-                Klikaj zgodnie z twoim tętnem na szyi
-            </div>
-            <div class="result-value" id="bpm-display" style="text-align:center; margin-bottom:10px;">-- BPM</div>
-            <button class="outline" onclick="resetPulse()">Reset</button>
-        </div>
-
-
-        <div class="card" style="grid-column: 1 / -1;">
-            <div class="card-header">
-                <h2><span class="card-icon">🏃</span> Test Ruffiera (Wydolność serca)</h2>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-                <div>
-                    <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">
-                        <strong>Procedura:</strong><br>
-                        1. Zmierz tętno spoczynkowe (P1).<br>
-                        2. Wykonaj 30 przysiadów w 60 sekund.<br>
-                        3. Zmierz tętno od razu po wysiłku (P2).<br>
-                        4. Odpocznij 1 minutę i zmierz tętno (P3).
-                    </p>
-                    <div class="timer-display" id="ruffier-timer">00:00</div>
-                    <button class="outline" onclick="startRuffierTimer('exercise')">Stoper: Ćwiczenie (60s)</button>
-                    <button class="outline" onclick="startRuffierTimer('rest')">Stoper: Odpoczynek (60s)</button>
-                </div>
-                <div>
-                    <div class="form-group">
-                        <label>P1 (Spoczynek)</label>
-                        <input type="number" id="p1">
-                    </div>
-                    <div class="form-group">
-                        <label>P2 (Po wysiłku)</label>
-                        <input type="number" id="p2">
-                    </div>
-                    <div class="form-group">
-                        <label>P3 (Po 1 minucie)</label>
-                        <input type="number" id="p3">
-                    </div>
-                    <button onclick="calcRuffier()">Oblicz Indeks Ruffiera</button>
-                </div>
-            </div>
-            <div id="res-ruffier" class="result-box"></div>
-        </div>
+<!-- SEKCJA 2: UMYSŁ -->
+<section id="p-mind" role="tabpanel" aria-labelledby="t-mind" hidden>
+  <div class="note" style="margin-bottom:20px">
+    <strong>Ważna informacja:</strong> Prezentowane kwestionariusze są narzędziami wyłącznie przesiewowymi i edukacyjnymi. Uzyskany wynik nie stanowi diagnozy klinicznej i nie zastępuje konsultacji z lekarzem lub psychologiem. Jeśli przeżywasz kryzys lub masz myśli o skrzywdzeniu siebie, skorzystaj z bezpłatnych numerów pomocy na dole strony.
+  </div>
+  
+  <div class="chips" id="chips" role="tablist" aria-label="Wybór testu psychologicznego"></div>
+  
+  <div class="card">
+    <div>
+      <h2 id="t-title"></h2>
+      <p class="hint" id="t-desc" style="margin-top:4px"></p>
     </div>
-
-    <div class="action-section">
-        <a href="https://psychodem-lab.github.io/zdrowie/trening.html" class="cta-button">
-            Seria ćwiczeń na zdrowy kręgosłup
-        </a>
+    
+    <div>
+      <div class="row" style="justify-content:space-between;flex:none;margin-bottom:6px">
+        <span class="hint">Postęp wypełniania</span>
+        <span class="hint" id="pg-t" style="text-align:right">0/0</span>
+      </div>
+      <div class="bar" aria-hidden="true"><i id="pg"></i></div>
     </div>
+    
+    <div id="qs" style="display:grid;gap:14px"></div>
+    
+    <div class="row" style="margin-top:10px">
+      <button class="ghost" id="clear" type="button">Wyczyść ten test</button>
+      <button class="btn-main" id="go" type="button">Sprawdź wynik</button>
+    </div>
+    
+    <p class="note" id="miss" style="border-color:var(--l2);margin-top:10px" hidden></p>
+    <div id="out" aria-live="polite" hidden></div>
+  </div>
+  
+  <!-- Pomoc kryzysowa -->
+  <div class="card" style="margin-top:20px" id="help">
+    <h2>Telefony zaufania i pomoc kryzysowa w Polsce</h2>
+    <p class="hint">Pomoc jest bezpłatna, anonimowa i dostępna dla każdego. Nie jesteś z tym sam(a).</p>
+    <div class="help">
+      <div>
+        <h3>Kryzysowy Telefon Zaufania (Dorośli)</h3>
+        <a href="tel:116123">116 123</a>
+        <p class="hint">Codziennie 14:00–22:00</p>
+      </div>
+      <div>
+        <h3>Telefon Zaufania FDN (Dzieci i Młodzież)</h3>
+        <a href="tel:116111">116 111</a>
+        <p class="hint">Całodobowo 24/7</p>
+      </div>
+      <div>
+        <h3>Centrum Wsparcia (Kryzys Psychiczny)</h3>
+        <a href="tel:800702222">800 70 22 22</a>
+        <p class="hint">Całodobowo 24/7</p>
+      </div>
+      <div>
+        <h3>Antydepresyjny Telefon ITAKA</h3>
+        <a href="tel:224848801">22 484 88 01</a>
+        <p class="hint">Godziny dyżurów na stronie fundacji</p>
+      </div>
+      <div>
+        <h3>Zagrożenie Życia i Zdrowia</h3>
+        <a href="tel:112" style="color:var(--l3)">112 (Alarmowy)</a>
+        <p class="hint">Zadzwoń pod 112 lub zgłoś się do najbliższego szpitala z oddziałem psychiatrycznym.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <footer>
-        <p><strong>Nota:</strong> Wszystkie obliczenia oparte są na powszechnie uznanych wzorach medycznych. Aplikacja nie zbiera danych (działa lokalnie). Wyniki mają charakter poglądowy i nie zastępują diagnozy lekarskiej.</p>
-    </footer>
+<!-- SEKCJA 3: PODSUMOWANIE -->
+<section id="p-sum" role="tabpanel" aria-labelledby="t-sum" hidden>
+  <div class="card" id="sum"></div>
+</section>
+
+<!-- STOPKA -->
+<footer class="no-print">
+  <p>Obliczenia opierają się na uznanych wzorach fizjologicznych, a testy psychologiczne są standaryzowanymi narzędziami open-access: PHQ-9 & GAD-7 (Pfizer / Public Domain), ASRS v1.1 (WHO), PSS-10 (Cohen et al.), AIS (Soldatos et al.), AUDIT-C (WHO).</p>
+</footer>
 </div>
 
 <script>
-    /* --- HELPERY --- */
-    function showResult(elementId, valueHtml, descHtml, color = 'var(--text-main)') {
-        const box = document.getElementById(elementId);
-        box.style.display = 'block';
-        box.style.borderLeftColor = color;
-        box.innerHTML = `<div class="result-value" style="color:${color}">${valueHtml}</div><div class="result-label">${descHtml}</div>`;
+// Pamięć lokalna i stan aplikacji
+const STORAGE_KEY = 'zdrowie_app_data_v2';
+const $ = s => document.querySelector(s);
+const LV = ['lv0', 'lv1', 'lv2', 'lv3'];
+const lvl = n => n == null ? '' : LV[n];
+
+// Globalne struktury danych
+let results = {};
+let mindAnswers = {}; // zapamiętuje odpowiedzi dla każdego testu: { phq9: {0:1, 1:2}, gad7: {} }
+
+// Zapis i odczyt z localStorage
+function loadSavedData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed.results) results = parsed.results;
+      if (parsed.mindAnswers) mindAnswers = parsed.mindAnswers;
+    }
+  } catch (e) {
+    console.warn("Błąd odczytu danych z localStorage", e);
+  }
+}
+
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ results, mindAnswers }));
+  } catch (e) {
+    console.warn("Błąd zapisu do localStorage", e);
+  }
+}
+
+function putResult(id, group, label, value, text, lv) {
+  results[id] = { group, label, value, text, lv, timestamp: new Date().toLocaleDateString('pl-PL') };
+  saveData();
+  renderSum();
+}
+
+function box(value, text, lv) {
+  return `<div class="res ${lvl(lv)}"><b>${value}</b><span>${text}</span></div>`;
+}
+
+/* ---------- Obsługa Motywu ---------- */
+$('#theme').onclick = () => {
+  const r = document.documentElement;
+  const isDarkSystem = matchMedia('(prefers-color-scheme:dark)').matches;
+  const cur = r.dataset.theme || (isDarkSystem ? 'dark' : 'light');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  r.dataset.theme = next;
+  try { localStorage.setItem('zdrowie_theme', next); } catch(e){}
+};
+
+// Przywrócenie zapisanego motywu
+try {
+  const savedTheme = localStorage.getItem('zdrowie_theme');
+  if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+} catch(e){}
+
+/* ---------- Obsługa Zakładek ---------- */
+['body', 'mind', 'sum'].forEach(k => {
+  $('#t-' + k).onclick = () => {
+    ['body', 'mind', 'sum'].forEach(o => {
+      const isSel = o === k;
+      $('#p-' + o).hidden = !isSel;
+      $('#t-' + o).setAttribute('aria-selected', isSel);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+});
+
+/* ---------- Podsumowanie ---------- */
+function renderSum() {
+  const all = Object.values(results);
+  const el = $('#sum');
+  document.getElementById('print-date').innerText = new Date().toLocaleDateString('pl-PL');
+
+  if (!all.length) {
+    el.innerHTML = `
+      <h2>Podsumowanie Wyników</h2>
+      <p class="hint">Nie zapisano jeszcze żadnych wyników. Wypełnij kalkulatory w zakładce <strong>Ciało</strong> lub wykonaj test przesiewowy w zakładce <strong>Umysł</strong>, a Twoje rezultaty pojawią się w tym miejscu.</p>
+    `;
+    return;
+  }
+
+  const attn = all.filter(r => r.lv >= 2).length;
+  const grp = (g, t) => {
+    const rows = all.filter(r => r.group === g);
+    if (!rows.length) return '';
+    return `<h3 style="margin-top:16px;margin-bottom:8px;border-b:1px solid var(--line);padding-bottom:4px">${t}</h3>` +
+      rows.map(r => `
+        <div class="sum">
+          <div>
+            <em>${r.label}</em>
+            <small>${r.text} (${r.timestamp || 'dzisiaj'})</small>
+          </div>
+          <div style="text-align:right">
+            <span class="${lvl(r.lv)}" style="${r.lv == null ? 'color:var(--accent)' : ''};font-weight:700;font-size:1.1rem">${r.value}</span>
+          </div>
+        </div>
+      `).join('');
+  };
+
+  el.innerHTML = `
+    <h2>Podsumowanie Wyników Samooceny</h2>
+    <p style="margin-top:6px">
+      ${attn > 0 
+        ? `Liczba wskaźników wymagających uwagi lub konsultacji: <strong style="color:var(--l2)">${attn}</strong>. Warto omówić je ze specjalistą.` 
+        : 'Wszystkie dotychczas przetestowane wskaźniki mieszczą się w normie.'}
+    </p>
+    ${grp('body', 'Zdrowie Fizyczne (Ciało)')}
+    ${grp('mind', 'Dobrostan Psychiczny (Umysł)')}
+    <div class="row no-print" style="margin-top:20px">
+      <button class="ghost" onclick="window.print()" type="button">🖨️ Drukuj / Zapisz do PDF</button>
+      <button class="ghost" id="wipe" type="button" style="color:var(--l3)">🗑️ Wyczyść wszystkie dane</button>
+    </div>
+  `;
+
+  const wipeBtn = $('#wipe');
+  if (wipeBtn) {
+    wipeBtn.onclick = () => {
+      if (confirm("Czy na pewno chcesz usunąć wszystkie zapisane wyniki kalkulatorów i odpowiedziane testy?")) {
+        results = {};
+        mindAnswers = {};
+        saveData();
+        renderSum();
+        openTest(curTestKey);
+      }
+    };
+  }
+}
+
+// Dodanie dynamicznego stylu kolorów w podsumowaniu
+const st = document.createElement('style');
+st.textContent = '.sum .lv0{color:var(--l0)}.sum .lv1{color:var(--l1)}.sum .lv2{color:var(--l2)}.sum .lv3{color:var(--l3)}';
+document.head.appendChild(st);
+
+/* ---------- Kalkulatory Fizyczne (Ciało) ---------- */
+const GENDER_OPTS = [['m', 'Mężczyzna'], ['k', 'Kobieta']];
+const PAL_OPTS = [
+  ['1.2', '1.2 – Siedzący tryb życia (brak ćwiczeń)'],
+  ['1.375', '1.375 – Niska aktywność (ćwiczenia 1-3 razy/tydz.)'],
+  ['1.55', '1.55 – Umiarkowana aktywność (ćwiczenia 3-5 razy/tydz.)'],
+  ['1.725', '1.725 – Wysoka aktywność (intensywne ćwiczenia 6-7 razy/tydz.)'],
+  ['1.9', '1.9 – Bardzo wysoka aktywność (ciężka praca fizyczna / treningi 2x dziennie)']
+];
+
+const calcs = [
+  {
+    id: 'bmi', t: 'Wskaźnik BMI', btn: 'Oblicz BMI',
+    f: [{ k: 'w', l: 'Waga (kg)' }, { k: 'h', l: 'Wzrost (cm)' }],
+    run: v => {
+      const b = v.w / Math.pow(v.h / 100, 2);
+      const [d, l] = b < 18.5 ? ['Niedowaga', 1] : b < 25 ? ['Waga prawidłowa', 0] : b < 30 ? ['Nadwaga', 2] : ['Otyłość', 3];
+      return [b.toFixed(1), `Kategoria: ${d}`, l];
+    }
+  },
+  {
+    id: 'whr', t: 'WHR (Talia do bioder)', btn: 'Analizuj sylwetkę',
+    f: [{ k: 'g', l: 'Płeć', sel: GENDER_OPTS }, { k: 'a', l: 'Obwód talii (cm)' }, { k: 'b', l: 'Obwód bioder (cm)' }],
+    run: v => {
+      const r = v.a / v.b;
+      const risk = (v.g === 'm' && r >= 0.9) || (v.g === 'k' && r >= 0.85);
+      return [r.toFixed(2), risk ? 'Typ androidalny (jabłko): wyższe ryzyko trzewne' : 'Typ gynoidalny (gruszka): typ bezpieczniejszy', risk ? 2 : 0];
+    }
+  },
+  {
+    id: 'whtr', t: 'WHtR (Talia do wzrostu)', btn: 'Sprawdź ryzyko metaboliczne',
+    f: [{ k: 'w', l: 'Obwód talii (cm)' }, { k: 'h', l: 'Wzrost (cm)' }],
+    run: v => {
+      const r = v.w / v.h;
+      const [d, l] = r <= 0.5 ? ['Wartość prawidłowa', 0] : r <= 0.6 ? ['Podwyższone ryzyko', 2] : ['Wysokie ryzyko metaboliczne', 3];
+      return [r.toFixed(2), `Interpretacja: ${d}`, l];
+    }
+  },
+  {
+    id: 'bmr', t: 'BMR i zapotrzebowanie CPM', btn: 'Oblicz BMR i CPM', pair: true,
+    f: [
+      { k: 'g', l: 'Płeć', sel: GENDER_OPTS },
+      { k: 'age', l: 'Wiek (lata)' },
+      { k: 'w', l: 'Waga (kg)' },
+      { k: 'h', l: 'Wzrost (cm)' },
+      { k: 'pal', l: 'Współczynnik aktywności (PAL)', sel: PAL_OPTS, full: true }
+    ],
+    run: v => {
+      const bmr = 10 * v.w + 6.25 * v.h - 5 * v.age + (v.g === 'm' ? 5 : -161);
+      const pal = parseFloat(v.pal) || 1.2;
+      const cpm = Math.round(bmr * pal);
+      return [`${Math.round(bmr)} / ${cpm} kcal`, `BMR: ${Math.round(bmr)} kcal | Całkowita przemiana materii (CPM): ${cpm} kcal/dzień`, null];
+    }
+  },
+  {
+    id: 'water', t: 'Zapotrzebowanie na wodę', btn: 'Oblicz zapotrzebowanie',
+    f: [{ k: 'w', l: 'Waga (kg)' }, { k: 'act', l: 'Czas aktywności fizycznej (minuty/dzień)', opt: true }],
+    run: v => {
+      const ml = Math.round(v.w * 30 + (v.act / 30) * 350);
+      return [`${(ml / 1000).toFixed(2)} Litra (${ml} ml)`, 'Sugerowane dzienne spożycie płynów', null];
+    }
+  }
+];
+
+// Generowanie formularzy kalkulatorów
+$('#calcs').innerHTML = calcs.map(c => `
+  <div class="card" id="c-${c.id}">
+    <h2>${c.t}</h2>
+    <div style="display:grid;grid-template-columns:${c.pair ? '1fr 1fr' : '1fr'};gap:10px">
+      ${c.f.map(f => `
+        <div style="${f.full ? 'grid-column:1/-1' : ''}">
+          <label class="f" for="${c.id}-${f.k}">${f.l}</label>
+          ${f.sel 
+            ? `<select id="${c.id}-${f.k}">${f.sel.map(o => `<option value="${o[0]}">${o[1]}</option>`).join('')}</select>`
+            : `<input type="number" inputmode="decimal" min="0" id="${c.id}-${f.k}"${f.opt ? ' value="0"' : ''}>`}
+        </div>
+      `).join('')}
+    </div>
+    <button class="btn-main" type="button" data-c="${c.id}">${c.btn}</button>
+    <div id="r-${c.id}" aria-live="polite"></div>
+  </div>
+`).join('');
+
+// Podpięcie zdarzeń obliczeniowych
+document.querySelectorAll('[data-c]').forEach(b => b.onclick = () => {
+  const c = calcs.find(x => x.id === b.dataset.c);
+  const v = {};
+  let ok = true;
+
+  c.f.forEach(f => {
+    const e = $(`#${c.id}-${f.k}`);
+    if (f.sel) {
+      v[f.k] = e.value;
+      return;
+    }
+    const n = parseFloat(e.value);
+    v[f.k] = isNaN(n) ? 0 : n;
+    if (!f.opt && (isNaN(n) || n <= 0)) ok = false;
+  });
+
+  const out = $('#r-' + c.id);
+  if (!ok) {
+    out.innerHTML = '<div class="note" style="margin-top:8px">Uzupełnij wszystkie pola prawidłowymi dodatnimi liczbami.</div>';
+    return;
+  }
+
+  const [val, txt, lv] = c.run(v);
+  out.innerHTML = box(val, txt, lv);
+  putResult(c.id, 'body', c.t, val, txt, lv);
+});
+
+/* ---------- Pulsometr Dotykowy ---------- */
+let taps = [];
+function handleTap() {
+  const now = Date.now();
+  const tapEl = $('#tap');
+  
+  // Efekt wizualny pulsu
+  tapEl.classList.add('pulsing');
+  setTimeout(() => tapEl.classList.remove('pulsing'), 150);
+
+  if (taps.length && now - taps[taps.length - 1] > 2200) {
+    taps = []; // Reset po przerwie dłuższej niż 2.2 sekundy
+  }
+  
+  taps.push(now);
+  if (taps.length > 12) taps.shift();
+
+  if (taps.length > 1) {
+    let sumIntervals = 0;
+    for (let i = 1; i < taps.length; i++) {
+      sumIntervals += (taps[i] - taps[i - 1]);
+    }
+    const avgInterval = sumIntervals / (taps.length - 1);
+    const bpm = Math.round(60000 / avgInterval);
+    
+    let level = 0;
+    let label = 'Tętno spoczynkowe w normie';
+    if (bpm < 50 || bpm > 100) {
+      level = 1;
+      label = bpm < 50 ? 'Niskie tętno (bradykardia / poziom sportowy)' : 'Podwyższone tętno (tachykardia / stres)';
     }
 
-    function getVal(id) {
-        const v = parseFloat(document.getElementById(id).value);
-        return isNaN(v) ? 0 : v;
-    }
+    $('#bpm').innerHTML = `<b>${bpm} BPM</b><span>Uśredniono z ${taps.length} stuknięć. ${label}</span>`;
+    putResult('pulse', 'body', 'Pulsometr (tętno)', `${bpm} BPM`, label, level);
+  }
+}
 
-    /* --- LOGIKA KALKULATORÓW --- */
-    function calcBMI() {
-        const w = getVal('bmi-weight');
-        const h = getVal('bmi-height') / 100;
-        if (w <= 0 || h <= 0) return alert("Podaj poprawne dane");
-        const bmi = (w / (h * h)).toFixed(2);
-        let desc = "", col = "";
-        if (bmi < 18.5) { desc = "Niedowaga"; col = "var(--primary)"; }
-        else if (bmi < 25) { desc = "Norma"; col = "var(--success)"; }
-        else if (bmi < 30) { desc = "Nadwaga"; col = "var(--warning)"; }
-        else { desc = "Otyłość"; col = "var(--danger)"; }
-        showResult('res-bmi', bmi, `Kategoria: ${desc}`, col);
-    }
+$('#tap').onclick = handleTap;
+$('#tap').onkeydown = e => {
+  if (e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    handleTap();
+  }
+};
+$('#pulse-reset').onclick = () => {
+  taps = [];
+  $('#bpm').innerHTML = '<b>-- BPM</b><span>Potrzeba co najmniej dwóch stuknięć.</span>';
+};
 
-    function calcWHR() {
-        const waist = getVal('whr-waist');
-        const hip = getVal('whr-hip');
-        const gender = document.getElementById('whr-gender').value;
-        if (waist <= 0 || hip <= 0) return alert("Podaj poprawne dane");
-        const whr = (waist / hip).toFixed(2);
-        let type = "Typ: Gruszka (Bezpieczny)";
-        let risk = (gender === 'm' && whr >= 0.9) || (gender === 'k' && whr >= 0.85);
-        if (risk) type = "Typ: Jabłko (Ryzyko otyłości trzewnej)";
-        showResult('res-whr', whr, type, risk ? 'var(--danger)' : 'var(--success)');
-    }
+/* ---------- Test Ruffiera ---------- */
+$('#ruffier').innerHTML = `
+  <h2>Test Ruffiera: Wydolność fizyczna i regeneracja serca</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    <div style="display:grid;gap:10px;align-content:start">
+      <ol class="hint" style="padding-left:18px;line-height:1.6">
+        <li>Zmierz tętno spoczynkowe w czasie 15 sekund i pomnóż przez 4 (P1).</li>
+        <li>Wykonaj 30 pełnych przysiadów w czasie 45-60 sekund.</li>
+        <li>Zmierz tętno tuż po przysiadach (P2).</li>
+        <li>Odpocznij 1 minutę w pozycji siedzącej i zmierz tętno ponownie (P3).</li>
+      </ol>
+      <div class="big" id="timer" aria-live="off">01:00</div>
+      <div id="ruf-controls" style="display:grid;gap:8px">
+        <button class="ghost" data-t="Trening" type="button">⏱️ Stoper przysiadów (60 s)</button>
+        <button class="ghost" data-t="Odpoczynek" type="button">⏱️ Stoper odpoczynku (60 s)</button>
+      </div>
+    </div>
+    <div style="display:grid;gap:10px;align-content:start">
+      <div><label class="f" for="p1">P1 (Spoczynek - BPM)</label><input type="number" inputmode="numeric" id="p1" placeholder="np. 70"></div>
+      <div><label class="f" for="p2">P2 (Po wysiłku - BPM)</label><input type="number" inputmode="numeric" id="p2" placeholder="np. 110"></div>
+      <div><label class="f" for="p3">P3 (Po 1 minucie - BPM)</label><input type="number" inputmode="numeric" id="p3" placeholder="np. 80"></div>
+      <button class="btn-main" type="button" id="ruf-go">Oblicz Indeks Ruffiera</button>
+    </div>
+  </div>
+  <div id="r-ruf" aria-live="polite"></div>
+`;
 
-    function calcWHtR() {
-        const w = getVal('whtr-waist');
-        const h = getVal('whtr-height');
-        if (w <= 0 || h <= 0) return alert("Podaj dane");
-        const whtr = (w / h).toFixed(2);
-        let desc = "", col = "";
-        if (whtr <= 0.5) { desc = "Zdrowy poziom"; col = "var(--success)"; }
-        else if (whtr <= 0.6) { desc = "Podwyższone ryzyko"; col = "var(--warning)"; }
-        else { desc = "Wysokie ryzyko metaboliczne"; col = "var(--danger)"; }
-        showResult('res-whtr', whtr, `Interpretacja: ${desc}`, col);
-    }
+// Sygnał dźwiękowy po zakończeniu odliczania stopera (Web Audio API)
+function playTimerBeep() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime); // nuta A5
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 1.2);
+  } catch(e){}
 
-    function calcBMR() {
-        const w = getVal('bmr-weight'), h = getVal('bmr-height'), age = getVal('bmr-age');
-        const gender = document.getElementById('bmr-gender').value;
-        if (w <= 0 || h <= 0 || age <= 0) return alert("Wypełnij pola");
-        let bmr = (10 * w) + (6.25 * h) - (5 * age);
-        bmr = (gender === 'm') ? bmr + 5 : bmr - 161;
-        showResult('res-bmr', `${Math.round(bmr)} kcal`, "Podstawowa przemiana materii", "var(--primary-dark)");
-    }
+  if (navigator.vibrate) {
+    navigator.vibrate([200, 100, 200, 100, 400]);
+  }
+}
 
-    function calcWater() {
-        const w = getVal('water-weight'), act = getVal('water-active');
-        if (w <= 0) return alert("Podaj wagę");
-        let needs = w * 30 + (act / 30) * 350;
-        showResult('res-water', `${Math.round(needs)} ml`, "Dzienne zapotrzebowanie płynów", "#3498db");
+let timerInterval;
+document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
+  clearInterval(timerInterval);
+  let seconds = 60;
+  const label = b.dataset.t;
+  const d = $('#timer');
+  d.textContent = `${label}: 01:00`;
+  
+  timerInterval = setInterval(() => {
+    seconds--;
+    d.textContent = `${label}: 00:${String(seconds).padStart(2, '0')}`;
+    if (seconds <= 0) {
+      clearInterval(timerInterval);
+      d.textContent = `${label}: KONIEC!`;
+      playTimerBeep();
     }
+  }, 1000);
+});
 
-    let taps = [];
-    function handleTap() {
-        const now = Date.now();
-        if (taps.length > 0 && now - taps[taps.length - 1] > 2000) taps = [];
-        taps.push(now);
-        if (taps.length > 10) taps.shift();
-        if (taps.length > 1) {
-            let intervals = [];
-            for (let i = 1; i < taps.length; i++) intervals.push(taps[i] - taps[i-1]);
-            const bpm = Math.round(60000 / (intervals.reduce((a, b) => a + b) / intervals.length));
-            document.getElementById('bpm-display').innerText = bpm + " BPM";
-        }
-    }
-    function resetPulse() { taps = []; document.getElementById('bpm-display').innerText = "-- BPM"; }
+$('#ruf-go').onclick = () => {
+  const p = ['p1', 'p2', 'p3'].map(i => parseFloat($('#' + i).value));
+  if (p.some(x => !(x > 0) || isNaN(x))) {
+    $('#r-ruf').innerHTML = '<div class="note" style="margin-top:10px">Wprowadź prawidłowe wartości dla wszystkich 3 pomiarów tętna.</div>';
+    return;
+  }
+  
+  const index = (p[0] + p[1] + p[2] - 200) / 10;
+  const [desc, lvlIdx] = index <= 0 ? ['Wydolność bardzo wysoka (wybitna)', 0] :
+                        index <= 5 ? ['Wydolność dobra', 0] :
+                        index <= 10 ? ['Wydolność przeciętna', 1] :
+                        index <= 15 ? ['Wydolność słaba', 2] : ['Wydolność bardzo słaba', 3];
 
-    let timerInterval;
-    function startRuffierTimer(mode) {
-        clearInterval(timerInterval);
-        let seconds = 60;
-        const display = document.getElementById('ruffier-timer');
-        display.innerText = "00:60";
-        timerInterval = setInterval(() => {
-            seconds--;
-            display.innerText = `00:${seconds < 10 ? '0'+seconds : seconds}`;
-            if (seconds <= 0) {
-                clearInterval(timerInterval);
-                display.innerText = "KONIEC";
-                display.style.color = 'var(--danger)';
-            }
-        }, 1000);
-    }
+  $('#r-ruf').innerHTML = box(index.toFixed(1), `Ocena wydolności: ${desc}`, lvlIdx);
+  putResult('ruf', 'body', 'Test Ruffiera (Wydolność)', index.toFixed(1), `Ocena: ${desc}`, lvlIdx);
+};
 
-    function calcRuffier() {
-        const p1 = getVal('p1'), p2 = getVal('p2'), p3 = getVal('p3');
-        if (p1 <= 0 || p2 <= 0 || p3 <= 0) return alert("Podaj 3 pomiary");
-        const index = ((p1 + p2 + p3) - 200) / 10;
-        let desc = "", col = "";
-        if (index <= 0) { desc = "Wydolność: Wybitna"; col = "var(--success)"; }
-        else if (index <= 5) { desc = "Wydolność: Bardzo dobra"; col = "#80b918"; }
-        else if (index <= 10) { desc = "Wydolność: Przeciętna"; col = "var(--warning)"; }
-        else if (index <= 15) { desc = "Wydolność: Słaba"; col = "#e76f51"; }
-        else { desc = "Wydolność: Bardzo słaba"; col = "var(--danger)"; }
-        showResult('res-ruffier', index.toFixed(1), desc, col);
+/* ---------- Testy Psychologiczne (Umysł) ---------- */
+const OPTS_4 = ['Wcale nie', 'Kilka dni', 'Więcej niż połowę dni', 'Prawie codziennie'];
+const OPTS_5 = ['Nigdy', 'Rzadko', 'Czasami', 'Często', 'Bardzo często'];
+const arraySum = arr => arr.reduce((x, y) => x + y, 0);
+
+const testsData = {
+  phq9: {
+    n: 'PHQ-9', b: 'Depresja', title: 'PHQ-9 (Kwestionariusz Zdrowia Pacjenta)',
+    desc: 'Jak często w ciągu ostatnich 2 tygodni dokuczały Ci poniższe problemy?',
+    o: OPTS_4, max: 27,
+    q: [
+      'Małe zainteresowanie lub brak satysfakcji z wykonywania czynności.',
+      'Uczucie przygnębienia, depresji lub beznadziejności.',
+      'Trudności z zasypianiam, wybudzanie się lub zbyt długi sen.',
+      'Uczucie zmęczenia lub brak energii.',
+      'Brak apetytu lub przejadanie się.',
+      'Złe samopoczucie ze sobą – poczucie, że jest się do niczego albo że zawiodło się siebie lub rodzinę.',
+      'Trudności ze skupieniem uwagi (np. przy czytaniu gazety lub oglądaniu telewizji).',
+      'Poruszanie się lub mówienie tak wolno, że inni mogli to zauważyć. Lub przeciwnie – niepokój i niemożność usiedzenia w miejscu.',
+      'Myśli, że lepiej byłoby nie żyć albo myśli o wyrządzeniu sobie krzywdy.'
+    ],
+    warn: (a, s) => a[8] > 0 || s >= 15,
+    bands: [
+      [4, 'Brak lub minimalne objawy depresyjne', 0, 'Wynik mieści się w normie. Wskazuje na brak istotnych objawów depresyjnych. Zaleca się dbanie o higienę psychiczną.'],
+      [9, 'Łagodne objawy depresyjne', 1, 'Twoje wyniki wskazują na obecność łagodnych objawów depresyjnych. Warto obserwować swoje samopoczucie, zadbać o odpoczynek i redukcję stresu.'],
+      [14, 'Umiarkowane objawy depresyjne', 2, 'Wynik wskazuje na umiarkowane nasilenie objawów. Wskazana jest konsultacja z lekarzem, psychologiem lub psychiatrą.'],
+      [19, 'Umiarkowanie ciężkie objawy depresyjne', 2, 'Wynik sugeruje znaczne nasilenie objawów depresyjnych. Zalecana jest pilna konsultacja ze specjalistą.'],
+      [99, 'Ciężkie objawy depresyjne', 3, 'Wynik wskazuje na bardzo wysokie nasilenie objawów depresyjnych. Wymagana jest niezwłoczna konsultacja z lekarzem psychiatrą.']
+    ]
+  },
+  gad7: {
+    n: 'GAD-7', b: 'Lęk uogólniony', title: 'GAD-7 (Skala Lęku Uogólnionego)',
+    desc: 'Jak często w ciągu ostatnich 2 tygodni dokuczały Ci następujące problemy?',
+    o: OPTS_4, max: 21,
+    q: [
+      'Uczucie zdenerwowania, lęku lub napięcia.',
+      'Niemożność powstrzymania się od zamartwiania się lub kontrolowania go.',
+      'Nadmierne zamartwianie się różnymi sprawami.',
+      'Trudności w odprężeniu się.',
+      'Niepokój fizyczny – trudność w usiedzeniu w miejscu.',
+      'Łatwe wpadanie w irytację lub rozdrażnienie.',
+      'Uczucie strachu, jakby miało stać się coś strasznego.'
+    ],
+    warn: (a, s) => s >= 15,
+    bands: [
+      [4, 'Minimalny poziom lęku', 0, 'Wynik wskazuje na niski poziom lęku, mieszczący się w granicach normy.'],
+      [9, 'Łagodny poziom lęku', 1, 'Wynik wskazuje na łagodne objawy lękowe. Pomocne mogą być techniki relaksacyjne oraz regularny ruch.'],
+      [14, 'Umiarkowany poziom lęku', 2, 'Wynik wskazuje na umiarkowany poziom lęku uogólnionego. Zaleca się konsultację z psychologiem lub psychoterapeutą.'],
+      [99, 'Ciężki / nasilony poziom lęku', 3, 'Wynik wskazuje na wysokie nasilenie objawów lękowych. Wskazana jest konsultacja ze specjalistą (psychiatrą/ psychoterapeutą).']
+    ]
+  },
+  asrs: {
+    n: 'ASRS v1.1', b: 'ADHD u dorosłych', title: 'ASRS v1.1 (WHO Adult ADHD Self-Report Scale)',
+    desc: 'Odpowiedz na pytania dotyczące objawów w ciągu ostatnich 6 miesięcy.',
+    o: OPTS_5, max: 6, unit: ' (punkty krytyczne)',
+    q: [
+      'Jak często masz trudności z wykończeniem szczegółów projektu, gdy najtrudniejsze części zostały zrobione?',
+      'Jak często masz trudności ze zorganizowaniem rzeczy, kiedy wykonujesz zadanie wymagające uporządkowania?',
+      'Jak często masz problemy z zapamiętaniem spotkań lub obowiązków?',
+      'Gdy masz do zrobienia zadanie wymagające dużo myślenia, jak często unikasz go lub opóźniasz jego rozpoczęcie?',
+      'Jak często wiercisz się lub poruszasz dłońmi/stopami, gdy musisz siedzieć przez dłuższy czas?',
+      'Jak często czujesz nadmierną potrzebę aktywności, jakbyś miał(a) w sobie silnik?'
+    ],
+    score: a => a.filter((v, i) => v >= (i < 3 ? 2 : 3)).length,
+    warn: (a, s) => s >= 4,
+    bands: [
+      [3, 'Niskie prawdopodobieństwo ADHD', 0, (a, s) => `Uzyskano ${s} z 6 punktów krytycznych (suma punktów: ${arraySum(a)}/24). Odpowiedzi nie wskazują na wysokie prawdopodobieństwo ADHD wg kryteriów WHO ASRS v1.1.`],
+      [6, 'Wysokie prawdopodobieństwo ADHD u dorosłych', 2, (a, s) => `Uzyskano ${s} z 6 punktów krytycznych (suma punktów: ${arraySum(a)}/24). Wynik 4 lub więcej punktów krytycznych silnie sugeruje obecność objawów zgodnych z ADHD u dorosłych. Wskazana jest pełna diagnoza u specjalisty.`]
+    ]
+  },
+  pss10: {
+    n: 'PSS-10', b: 'Stres', title: 'PSS-10 (Skala Odczuwanego Stresu)',
+    desc: 'Pytania dotyczą Twoich uczuć i myśli w ciągu OSTATNIEGO MIESIĄCA.',
+    o: ['Nigdy', 'Prawie nigdy', 'Czasami', 'Dość często', 'Bardzo często'], max: 40,
+    q: [
+      'Jak często byłeś(-aś) zdenerwowany(-a) z powodu czegoś, co zdarzyło się nieoczekiwanie?',
+      'Jak często czułeś(-aś), że nie jesteś w stanie kierować ważnymi sprawami w swoim życiu?',
+      'Jak często czułeś(-aś) się podenerwowany(-a) i zestresowany(-a)?',
+      'Jak często czułeś(-aś) pewność co do swojej zdolności do radzenia sobie z problemami osobistymi? (pytanie odwrócone)',
+      'Jak często czułeś(-aś), że sprawy układają się po Twojej myśli? (pytanie odwrócone)',
+      'Jak często stwierdzałeś(-aś), że nie możesz poradzić sobie ze wszystkimi obowiązkami?',
+      'Jak często byłeś(-aś) w stanie kontrolować rozdrażnienie w swoim życiu? (pytanie odwrócone)',
+      'Jak często czułeś(-aś), że panujesz nad sytuacją? (pytanie odwrócone)',
+      'Jak często denerwowałeś(-aś) się z powodu spraw, które zdarzyły się poza Twoją kontrolą?',
+      'Jak często czułeś(-aś), że piętrzące się trudności są tak duże, że nie możesz ich pokonać?'
+    ],
+    score: a => arraySum(a.map((v, i) => [3, 4, 6, 7].includes(i) ? 4 - v : v)),
+    warn: (a, s) => s >= 20,
+    bands: [
+      [13, 'Niski poziom odczuwanego stresu', 0, 'Wykazujesz dobrą odporność na stresory. Twoje mechanizmy radzenia sobie są obecnie wystarczające.'],
+      [19, 'Umiarkowany poziom odczuwanego stresu', 1, 'Odczuwasz umiarkowany poziom stresu. Warto zadbać o regenerację i techniki obniżania napięcia.'],
+      [99, 'Wysoki poziom odczuwanego stresu', 2, 'Twój poziom stresu jest wysoki. Przewlekły stres może szkodzić zdrowiu fizycznemu i psychicznemu. Wskazane podjęcie działań zaradczych.']
+    ]
+  },
+  ais: {
+    n: 'AIS', b: 'Bezsenność', title: 'AIS (Ateńska Skala Bezsenności)',
+    desc: 'Czy poniższe trudności występowały co najmniej 3 razy w tygodniu w ciągu ostatniego miesiąca?',
+    o: ['Brak problemu / Normalnie', 'Niewielki problem', 'Znaczny problem', 'Bardzo poważny problem'], max: 24,
+    q: [
+      'Zasypianie (czas potrzebny na zaśnięcie po zgaszeniu światła).',
+      'Wybudzanie się w nocy.',
+      'Ostateczne wybudzenie się rano (wcześniejsze niż zamierzone).',
+      'Całkowity czas trwania snu (czy sen był wystarczająco długi).',
+      'Ogólna jakość snu (zadowolenie ze snu).',
+      'Samopoczucie w ciągu następnego dnia.',
+      'Sprawność fizyczna i psychiczna w ciągu dnia.',
+      'Senność w ciągu dnia.'
+    ],
+    warn: (a, s) => s >= 8,
+    bands: [
+      [5, 'Norma (brak objawów bezsenności)', 0, 'Jakość Twojego snu mieści się w normie. Prawidłowy sen wspiera regenerację organizmu.'],
+      [7, 'Wynik graniczny (łagodne trudności)', 1, 'Doświadczasz pewnych trudności ze snem. Warto zwrócić uwagę na higienę snu.'],
+      [99, 'Prawdopodobieństwo bezsenności klinicznej', 2, 'Wynik 8 punktów lub więcej sugeruje istotne zaburzenia snu. Wskazana konsultacja z lekarzem lub terapeutą CBT-I.']
+    ]
+  },
+  auditc: {
+    n: 'AUDIT-C', b: 'Alkohol', title: 'AUDIT-C (Przesiewowy Test Spożycia Alkoholu)',
+    desc: 'Krótki kwestionariusz ocenijacy wzorce spożywania alkoholu w ciągu ostatnich 12 miesięcy.',
+    max: 12,
+    q: [
+      'Jak często pijesz napoje zawierające alkohol?',
+      'Ile porcji alkoholu wypijasz przeciętnie w dniu, w którym pijesz? (1 porcja = ok. 10g czystego alkoholu, np. 250ml piwa, 100ml wina, 30ml wódki)',
+      'Jak często wypijasz 5 lub więcej porcji alkoholu podczas jednej okazji?'
+    ],
+    qo: [
+      ['Nigdy', 'Raz w miesiącu lub rzadziej', '2 do 4 razy w miesiącu', '2 do 3 razy w tygodniu', '4 lub więcej razy w tygodniu'],
+      ['1 lub 2 porcje', '3 lub 4 porcje', '5 lub 6 porcji', '7 do 9 porcji', '10 lub więcej porcji'],
+      ['Nigdy', 'Rzadziej niż raz w miesiącu', 'Co miesiąc', 'Co tydzień', 'Codziennie lub prawie codziennie']
+    ],
+    warn: (a, s) => s >= 4,
+    bands: [
+      [2, 'Niskie ryzyko szkodliwego spożywania', 0, 'Wynik wskazuje na niski poziom ryzyka związanego ze spożywaniem alkoholu.'],
+      [3, 'Podwyższone ryzyko (zwłaszcza u kobiet)', 1, '3 punkty to próg podwyższonego ryzyka dla kobiet i niskiego dla mężczyzn. Warto przyjrzeć się wzorcom spożycia.'],
+      [7, 'Ryzykowne lub szkodliwe spożywanie alkoholu', 2, 'Wynik wskazuje na ryzykowny wzorzec picia. Zalecana konsultacja ze specjalistą terapii uzależnień.'],
+      [99, 'Wysokie ryzyko uzależnienia lub poważnych szkód', 3, 'Wysoki wynik sugeruje duże prawdopodobieństwo szkodliwego picia. Wskazana pilna konsultacja w poradni uzależnień.']
+    ]
+  }
+};
+
+let curTestKey = 'phq9';
+
+// Inicjalizacja przycisków wyboru testu (chips)
+$('#chips').innerHTML = Object.entries(testsData).map(([k, t]) => `
+  <button class="chip" data-k="${k}" type="button" role="tab" aria-selected="false">
+    <b>${t.n}</b>
+    <small>${t.b}</small>
+  </button>
+`).join('');
+
+document.querySelectorAll('.chip').forEach(b => {
+  b.onclick = () => openTest(b.dataset.k);
+});
+
+// Otwieranie konkretnego testu i odtwarzanie wprowadzonych pytań
+function openTest(k) {
+  curTestKey = k;
+  const t = testsData[k];
+  
+  if (!mindAnswers[k]) {
+    mindAnswers[k] = {};
+  }
+  const currentAnswers = mindAnswers[k];
+
+  document.querySelectorAll('.chip').forEach(b => {
+    const isCur = b.dataset.k === k;
+    b.setAttribute('aria-pressed', isCur);
+    b.setAttribute('aria-selected', isCur);
+  });
+
+  $('#t-title').textContent = t.title;
+  $('#t-desc').textContent = t.desc;
+  $('#out').hidden = true;
+  $('#miss').hidden = true;
+
+  // Generowanie pytań z odtworzeniem stanu zaznaczonych radioboxów
+  $('#qs').innerHTML = t.q.map((qText, i) => {
+    const savedVal = currentAnswers[i];
+    const opts = t.qo ? t.qo[i] : t.o;
+    
+    return `
+      <fieldset class="q" id="q${i}" style="border:0">
+        <legend style="font-weight:700;padding:0;margin-bottom:8px">${i + 1}. ${qText}</legend>
+        <div class="opts">
+          ${opts.map((o, v) => `
+            <label class="pill">
+              <input type="radio" name="q${i}" value="${v}" ${savedVal === v ? 'checked' : ''}>
+              <span>${o}</span>
+            </label>
+          `).join('')}
+        </div>
+      </fieldset>
+    `;
+  }).join('');
+
+  // Rejestrowanie odpowiedzi
+  $('#qs').querySelectorAll('input').forEach(r => {
+    r.onchange = () => {
+      const qIdx = +r.name.slice(1);
+      mindAnswers[curTestKey][qIdx] = +r.value;
+      saveData();
+      $('#q' + qIdx).classList.remove('miss');
+      updateTestProgress();
+    };
+  });
+
+  updateTestProgress();
+}
+
+function updateTestProgress() {
+  const t = testsData[curTestKey];
+  const n = t.q.length;
+  const currentAnswers = mindAnswers[curTestKey] || {};
+  const c = Object.keys(currentAnswers).length;
+
+  $('#pg-t').textContent = `${c}/${n}`;
+  $('#pg').style.width = (c / n * 100) + '%';
+}
+
+$('#clear').onclick = () => {
+  mindAnswers[curTestKey] = {};
+  saveData();
+  openTest(curTestKey);
+};
+
+$('#go').onclick = () => {
+  const t = testsData[curTestKey];
+  const n = t.q.length;
+  const currentAnswers = mindAnswers[curTestKey] || {};
+  const miss = [];
+
+  for (let i = 0; i < n; i++) {
+    if (currentAnswers[i] == null) {
+      miss.push(i);
+      $('#q' + i).classList.add('miss');
     }
+  }
+
+  const m = $('#miss');
+  if (miss.length) {
+    m.hidden = false;
+    m.textContent = `Brakuje odpowiedzi na pytania: ${miss.map(i => i + 1).join(', ')}. Prosimy o uzupełnienie brakujących pól.`;
+    $('#q' + miss[0]).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  m.hidden = true;
+
+  const answersArray = Array.from({ length: n }, (_, i) => currentAnswers[i]);
+  const score = t.score ? t.score(answersArray) : arraySum(answersArray);
+  const band = t.bands.find(b => score <= b[0]);
+  const text = typeof band[3] === 'function' ? band[3](answersArray, score) : band[3];
+  const pct = Math.min(100, Math.round(score / t.max * 100));
+  const when = new Date().toLocaleDateString('pl-PL') + ' ' + new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+
+  const o = $('#out');
+  o.hidden = false;
+  o.innerHTML = `
+    <div class="res ${lvl(band[2])}" style="margin-top:16px">
+      <b>${score} / ${t.max}${t.unit || ''}</b>
+      <span>Interpretacja: ${band[1]}</span>
+    </div>
+    <div class="bar" style="margin:12px 0 6px"><i style="width:${pct}%;background:var(--l${band[2]})"></i></div>
+    <p class="hint">Zakres skali: 0 do ${t.max} punktów. Wykonano: ${when}</p>
+    <p style="margin-top:10px;line-height:1.6">${text}</p>
+    ${t.warn(answersArray, score) ? `
+      <div class="note" style="margin-top:14px">
+        <strong>Zalecana konsultacja ze specjalistą:</strong> Uzyskany wynik lub odpowiedź na pytania krytyczne wskazują na potrzebę rozmowy z profesjonalistą (lekarzem lub psychologiem). Bezpłatne numery pomocy znajdziesz <a href="#help" onclick="document.getElementById('help').scrollIntoView({behavior:'smooth'});return false">poniżej</a>.
+      </div>
+    ` : ''}
+  `;
+
+  o.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  putResult(curTestKey, 'mind', `${t.n} (${t.b})`, `${score}/${t.max}`, band[1], band[2]);
+};
+
+// Inicjalizacja startowa
+loadSavedData();
+openTest('phq9');
+renderSum();
 </script>
-
 </body>
 </html>
